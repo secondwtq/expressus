@@ -1,0 +1,20 @@
+{
+  "name": "expressus",
+  "version": "0.1.0",
+  "description": "Expressus.",
+  "main": "app.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/secondwtq/expressus.git"
+  },
+  "author": "secondwtq <lovejay-lovemusic@outlook.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/secondwtq/expressus/issues"
+  },
+  "homepage": "https://github.com/secondwtq/expressus#readme",
+  "dependencies": {
+    "express": "^4.12.4"
+  }
+}
