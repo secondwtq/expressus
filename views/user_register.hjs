@@ -22,7 +22,7 @@
 			<input type="password" placeholder="Confirm Password" class="login-input">
 		</fieldset>
 		<button type="submit" class="pure-button pure-button-primary">Register</button>
-		<a href="#">Login</a>
+		<a href="/user/login">Login</a>
 	</form>
 </div>
 

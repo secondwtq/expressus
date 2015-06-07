@@ -35,12 +35,12 @@
 	<div id="center-container">
 		
 		<div class="center-top">
-			<div id="user-meta" class="has-logged-in">
+			<div id="user-meta" class="{{logged_in_class}}">
 				<!-- if logged in -->
 				<div class="pure-menu pure-menu-horizontal logged-in">
 				    <ul class="pure-menu-list">
 				        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-				            <a href="#"class="pure-menu-link user-meta-initial">
+				            <a href="#" class="pure-menu-link user-meta-initial">
 								<span>secondwtq</span>
 								<span id="user-avatar"></span>
 							</a>
@@ -53,7 +53,7 @@
 				</div>
 				<!-- else -->
 				<div class="not-logged-in">
-					<a href="#">Login</a>
+					<a href="/user/login">Login</a>
 				</div>
 			</div>
 			<div class="center-top-inner">

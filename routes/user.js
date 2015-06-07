@@ -16,17 +16,19 @@ router.get('/login', function (req, res, next) {
 router.post('/login', function (req, res, next) {
 	passport.authenticate('local', function (err, user, info) {
 		if (err) { return next(err); }
-		if (!user) { return res.render('user_login', { }); }
+		
+		if (!user) { return res.render('user_login', {
+			failed: true,
+			failed_message: info.message,
+			last_username: req.body.username
+		}); }
+		
 		req.logIn(user, function (err) {
+			console.log('callback');
 			if (err) { return next(err); }
-			return res.redirect('/blog');
+			return res.redirect('/register');
 		});
 	})(req, res, next);
 });
-
-router.post('/login', passport.authenticate('local', function (err, user, info) {
-	if (err) { return; }
-	
-}));
 
 module.exports = router;

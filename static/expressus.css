@@ -110,6 +110,12 @@ body.subpage-body {
 
 .has-not-logged-in .logged-in {
 	display: none; }
+	
+.login-failed-msg {
+	color: lightcoral;
+	font-size: smaller;
+	text-shadow: 1px 0px darkslategray;
+}
 
 #left-center {
 	text-align: center;

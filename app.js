@@ -62,7 +62,7 @@ passport.use('local', new LocalStrategy(function (username, passwd, done) {
 		"select * from stakeholder where username=$1 and passwd=$2",[username, passwd]).
 	then(function (data) {
 		console.log('done');
-		done(null, data);
+		return done(null, data);
 	}, function (reason) {
 		if (reason.trim() === 'No data returned from the query.') {
 			return done(null, false, { message: 'Username and password doesnot match.' });
