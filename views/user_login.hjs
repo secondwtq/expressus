@@ -12,10 +12,10 @@
 	
 <div class="subpage-container login-container">
 	<h3 class="subpage-title">Login</h3>
-	<form class="pure-form">
+	<form class="pure-form" action="/user/login" method="post">
 		<fieldset class="pure-group">
-			<input type="text" placeholder="Username" class="login-input">
-			<input type="password" placeholder="Password" class="login-input">
+			<input type="text" name="username" placeholder="Username" class="login-input">
+			<input type="password" name="password" placeholder="Password" class="login-input">
 		</fieldset>
 		<button type="submit" class="pure-button pure-button-primary">Login</button>
 		<a href="#">Register</a>
