@@ -2,15 +2,17 @@
 <html>
 <head>
 
-	<title>Expressus Demo Page</title>
-	
-	<link rel="stylesheet" href="static/external/pure.css">
-	<link rel="stylesheet" href="static/expressus.css">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Expressus Demo Page</title>
 
+<link rel="stylesheet" href="/static/external/pure.css">
+<link rel="stylesheet" href="/static/expressus.css">
+	
 </head>
 <body>
-	
 <div id="container">
+	
 	<div id="left-container">
 		<div class="left-top">
 			<div class="pure-menu pure-menu-horizontal">
@@ -21,9 +23,7 @@
 		</div>
 		<div id="left-center">
 			<div id="author-intro">
-				<div id="author-avatar">
-					
-				</div>
+				<div id="author-avatar"></div>
 				<div id="author-summary">
 					<div id="author-name">secondwtq</div>
 					<div class="author-text">狂热的 Web 开发爱好者</div>
@@ -31,6 +31,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<div id="center-container">
 		
 		<div class="center-top">
@@ -101,10 +102,11 @@
 				</div>
 			</div>
 		</div>
+		
 	</div>
-
-</div>
 	
+</div>
+
 <div id="footer">
 	<div id="footer-body">
 		Copyleft 2015 secondwtq lovejay-lovemusic#outlook.com
@@ -114,5 +116,4 @@
 <script src="static/expressus.js"></script>
 
 </body>
-	
 </html>

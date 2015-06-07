@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+	
+<title>Login</title>
+
+<link rel="stylesheet" href="/static/external/pure.css">
+<link rel="stylesheet" href="/static/expressus.css">
+	
+</head>
+<body class="subpage-body">
+	
+<div class="subpage-container login-container">
+	<h3 class="subpage-title">Login</h3>
+	<form class="pure-form">
+		<fieldset class="pure-group">
+			<input type="text" placeholder="Username" class="login-input">
+			<input type="password" placeholder="Password" class="login-input">
+		</fieldset>
+		<button type="submit" class="pure-button pure-button-primary">Login</button>
+		<a href="#">Register</a>
+	</form>
+</div>
+
+<div id="footer">
+	<div id="footer-body">
+		Copyleft 2015 secondwtq <br />
+		lovejay-lovemusic#outlook.com
+	</div>
+</div>
+
+</body>
+</html>
