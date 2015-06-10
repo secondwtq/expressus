@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html style="height: 100%;">
+<html class="subpage-html">
 <head>
-	
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Register</title>
 
 <link rel="stylesheet" href="/static/external/pure.css">
@@ -10,9 +13,10 @@
 </head>
 <body class="subpage-body">
 	
-<div class="subpage-container login-container">
+<div class="subpage-container">
 	<h3 class="subpage-title">Register</h3>
-	<form class="pure-form">
+	{{#failed}}<div class="login-failed-msg">{{failed_message}}</div>{{/failed}}
+	<form class="pure-form" action="register" method="post">
 		<fieldset class="pure-group">
 			<input type="email" placeholder="Email" class="login-input">
 			<input type="text" placeholder="Username" class="login-input">

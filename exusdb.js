@@ -1,12 +1,16 @@
 
 var sprintf = require('sprintf-js').sprintf;
 var config = require('./exusconfig');
-
 var pgplib = require('pg-promise');
-var pgp = pgplib({ });
+var monitor = require('pg-monitor');
+
+var options = { };
+
+monitor.attach(options);
+var pgp = pgplib(options);
 
 var pg_cnstr = process.env.DATABASE_URL || 
-	sprintf("posrgres://%(db_username)s:%(db_passwd)s@%(db_host)s:%(db_port)s/tooyoung", config);
+	sprintf("postgres://%(db_username)s:%(db_passwd)s@%(db_host)s:%(db_port)s/tooyoung", config);
 
 var connection = undefined;
 
@@ -20,10 +24,14 @@ var db_close = function () {
 	}
 };
 
-var db_get = function () { return connection; }
+var db_get = function () { return connection; };
 
 module.exports = {
 	db: db_get,
 	connect: db_connect,
-	close: db_close	
+	close: db_close,
+	error: {
+		not_found: function (reason) {
+			return (reason.trim() === 'No data returned from the query.'); }
+	}
 };

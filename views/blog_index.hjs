@@ -4,6 +4,7 @@
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Expressus Demo Page</title>
 
 <link rel="stylesheet" href="/static/external/pure.css">
@@ -40,67 +41,58 @@
 				<div class="pure-menu pure-menu-horizontal logged-in">
 				    <ul class="pure-menu-list">
 				        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-				            <a href="#" class="pure-menu-link user-meta-initial">
-								<span>secondwtq</span>
-								<span id="user-avatar"></span>
+				            <a href="/user/{{user.id}}" class="pure-menu-link user-meta-initial">
+								<span>{{user.username}}</span>
+								<img id="user-avatar" src="{{user.avatar}}"></img>
 							</a>
 				            <ul class="pure-menu-children">
-				                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Logout</a></li>
-				                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Twitter</a></li>
+				                <li class="pure-menu-item">
+									<form action="/user/logout" method="post" id="form-logout">
+										<input name="redirecturl" type="text" class="ex-hidden" value="/blog">
+										<a class="pure-menu-link" href="#" onclick="document.getElementById('form-logout').submit();">Logout</a>
+									</form>
+								</li>
 				            </ul>
 				        </li>
 				    </ul>
 				</div>
 				<!-- else -->
 				<div class="not-logged-in">
-					<a href="/user/login">Login</a>
+					<a href="/user/login?redirecturl=/blog">Login</a>
 				</div>
 			</div>
 			<div class="center-top-inner">
 				<nav class="pure-menu pure-menu-horizontal">
 					<ul id="nav-top" class="pure-menu-list">
-						<li class="pure-menu-item"><a href="#" class="pure-menu-link">Index</a></li>
-						<li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li>
-						<li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+						<li class="pure-menu-item"><a href="/" class="pure-menu-link">Index</a></li>
+						<li class="pure-menu-item"><a href="/blog" class="pure-menu-link">Blog</a></li>
+						<li class="pure-menu-item"><a href="/about" class="pure-menu-link">About</a></li>
 					</ul>
 				</nav>
 			</div>
 		</div>
 		<div id="center-container-inner">
-			<div id="articles">
-				<div class="article-index">
-					<div class="article-head">
-						<h3>Express.js 学习笔记 <span class="article-date">12-08</h3></h3>
-						
-					</div>
-					<div class="article-summary">
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel imperdiet lectus. Mauris sodales consequat malesuada. Proin ut arcu dui. Nulla eu vehicula elit. Nunc ac arcu sed lacus faucibus dignissim. Curabitur facilisis non enim eget lacinia. Nulla elementum blandit dolor ut finibus.
-	
-							Praesent sagittis, purus vitae dignissim pellentesque, turpis est vestibulum metus, quis porttitor neque quam ac odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque interdum consequat ornare. Fusce imperdiet porttitor luctus. Donec fermentum, orci vitae tempus luctus, erat odio rhoncus nisi, eget facilisis purus metus non justo. Pellentesque facilisis pharetra rutrum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum vitae turpis dolor. Quisque id aliquam nisl. Vivamus in lectus vitae tellus efficitur auctor. Aenean iaculis, neque sit amet interdum posuere, leo diam hendrerit ante, non pulvinar libero neque sed mauris. Proin vehicula fringilla magna, quis pharetra risus dignissim ut. Aliquam faucibus diam ipsum, vitae faucibus diam fringilla eget. Praesent in velit lacus. Aenean tincidunt euismod sem in pretium.
-						</p>
-					</div>
-					<div class="article-meta">
-						
-					</div>
-				</div>
-				<div class="article-index">
-					<div class="article-head">
-						<h3>Express.js 学习笔记 <span class="article-date">12-08</h3></h3>
-						
-					</div>
-					<div class="article-summary">
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel imperdiet lectus. Mauris sodales consequat malesuada. Proin ut arcu dui. Nulla eu vehicula elit. Nunc ac arcu sed lacus faucibus dignissim. Curabitur facilisis non enim eget lacinia. Nulla elementum blandit dolor ut finibus.
-	
-							Praesent sagittis, purus vitae dignissim pellentesque, turpis est vestibulum metus, quis porttitor neque quam ac odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque interdum consequat ornare. Fusce imperdiet porttitor luctus. Donec fermentum, orci vitae tempus luctus, erat odio rhoncus nisi, eget facilisis purus metus non justo. Pellentesque facilisis pharetra rutrum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum vitae turpis dolor. Quisque id aliquam nisl. Vivamus in lectus vitae tellus efficitur auctor. Aenean iaculis, neque sit amet interdum posuere, leo diam hendrerit ante, non pulvinar libero neque sed mauris. Proin vehicula fringilla magna, quis pharetra risus dignissim ut. Aliquam faucibus diam ipsum, vitae faucibus diam fringilla eget. Praesent in velit lacus. Aenean tincidunt euismod sem in pretium.
-						</p>
-					</div>
-					<div class="article-meta">
-						
+			{{#articles}}
+				<div id="articles">
+					<div class="article-index">
+						<div class="article-head">
+							<h3><a href="/blog/article/{{id}}">{{title}}</a><span class="article-date">12-08</h3></h3>
+						</div>
+						<div class="article-summary">
+							{{summary}}
+						</div>
+						<div class="article-meta">
+							{{^read_count}}<span class="small-vert-dived">no read </span>{{/read_count}}
+							{{#read_count}}<span class="small-vert-dived">{{read_count}} read </span>{{/read_count}}
+							<span class="small-vert-dived">{{^comment_count}}no{{/comment_count}}{{#comment_count}}{{comment_count}}{{/comment_count}} comment </span>
+							by <a href="/user/{{author_id}}">{{username}}</a>
+						</div>
 					</div>
 				</div>
-			</div>
+			{{/articles}}
+			{{^articles}}
+				<div class="no-article">No article yet :D</div>
+			{{/articles}}
 		</div>
 		
 	</div>

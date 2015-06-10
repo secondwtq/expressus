@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="subpage-html">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Login</title>
+
+<link rel="stylesheet" href="/static/external/pure.css">
+<link rel="stylesheet" href="/static/expressus.css">
+	
+</head>
+<body class="subpage-body">
+	
+<div class="subpage-container center-aligned">
+	<img class="user-avatar-large" src="{{user.avatar}}"></img>
+	<hr class="dashed" />
+	<h3 class="subpage-title">User - {{user.displayname}} <span class="ex-small halftrans">({{user.username}})</span></h3>
+	<div class="ex-small">The Hidden Foundation</div>
+	<hr class="dashed" />
+	<div class="ex-small">&lt;{{user.email}}&gt;</div>
+	<hr class="dashed" />
+	<div class="ex-small">Registered: 1996-12-08</div>
+	<hr class="dashed" />
+</div>
+
+<div id="footer">
+	<div id="footer-body">
+		Copyleft 2015 secondwtq <br />
+		lovejay-lovemusic#outlook.com
+	</div>
+</div>
+
+</body>
+</html>

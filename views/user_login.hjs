@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html style="height: 100%;">
+<html class="subpage-html">
 <head>
-	
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Login</title>
 
 <link rel="stylesheet" href="/static/external/pure.css">
@@ -16,10 +19,11 @@
 	<form class="pure-form" action="/user/login" method="post">
 		<fieldset class="pure-group">
 			<input type="text" name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
-			<input type="password" name="password" placeholder="Password" class="login-input">
+			<input type="password" name="passwd" placeholder="Password" class="login-input">
 		</fieldset>
 		<button type="submit" class="pure-button pure-button-primary">Login</button>
 		<a href="/user/register">Register</a>
+		<input type="text" name="redirecturl" class="ex-hidden" value="{{redirecturl}}">
 	</form>
 </div>
 

@@ -25,7 +25,9 @@
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "pg": "^4.3.0",
+    "pg-monitor": "^0.2.0",
     "pg-promise": "^1.4.3",
-    "sprintf-js": "^1.0.2"
+    "sprintf-js": "^1.0.2",
+    "underscore": "^1.8.3"
   }
 }

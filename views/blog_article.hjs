@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Expressus Demo Page</title>
+
+<link rel="stylesheet" href="/static/external/pure.css">
+<link rel="stylesheet" href="/static/external/font-awesome.css">
+
+<link rel="stylesheet" href="/static/ext/article-scrollbar.css">
+<link rel="stylesheet" href="/static/ext/load-anim.css">
+
+<link rel="stylesheet" href="/static/expressus.css">
+
+</head>
+<body>
+<div id="container">
+	
+	<div id="left-container">
+		<div class="left-top">
+			<div class="pure-menu pure-menu-horizontal">
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="#" class="pure-menu-link">too-young.me</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="left-center">
+			<div id="author-intro">
+				<a href="/user/{{author_id}}"><img id="author-avatar" src="{{avatar}}"></img></a>
+				<div id="author-summary">
+					<div id="author-name"><a href="/user/{{author_id}}">{{username}}</a></div>
+					<div class="author-text">{{user_title}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="center-container">
+		
+		<div class="center-top">
+			<div id="user-meta" class="{{logged_in_class}}">
+				<!-- if logged in -->
+				<div class="pure-menu pure-menu-horizontal logged-in">
+				    <ul class="pure-menu-list">
+				        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+				            <a href="/user/{{user.id}}" class="pure-menu-link user-meta-initial">
+								<span>{{user.username}}</span>
+								<img id="user-avatar" src="{{user.avatar}}"></img>
+							</a>
+				            <ul class="pure-menu-children">
+				                <li class="pure-menu-item">
+									<form action="/user/logout" method="post" id="form-logout">
+										<input name="redirecturl" type="text" class="ex-hidden" value="/blog">
+										<a class="pure-menu-link" href="#" onclick="document.getElementById('form-logout').submit();">Logout</a>
+									</form>
+								</li>
+				            </ul>
+				        </li>
+				    </ul>
+				</div>
+				<!-- else -->
+				<div class="not-logged-in">
+					<a href="/user/login?redirecturl=/blog/article/{{id}}">Login</a>
+				</div>
+			</div>
+			<div class="center-top-inner">
+				<nav class="pure-menu pure-menu-horizontal">
+					<ul id="nav-top" class="pure-menu-list">
+						<li class="pure-menu-item"><a href="/" class="pure-menu-link">Index</a></li>
+						<li class="pure-menu-item"><a href="/blog" class="pure-menu-link">Blog</a></li>
+						<li class="pure-menu-item"><a href="/about" class="pure-menu-link">About</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div id="center-container-inner">
+			<div class="article-index" id="jump-to-me">
+				<div class="article-head load-fade-in">
+					<h3 class="no-margin">{{title}}<span class="article-date">12-08</span></h3>
+					<h5 class="article-subtitle">{{subtitle}}</h5>
+				</div>
+				<div class="article-paragraphs-fade load-fade-in load-delay-2">
+					<div class="article-paragraphs">
+						<div class="article-paragraphs-fade-placeholder"></div>
+						{{#paragraphs}}
+							<div class="article-paragraph-wrapper">
+								{{#have_comment}}
+									<div class="right-floated para-comment-num">0</div>
+								{{/have_comment}}
+								<div class="paragraph-comment-btn right-floated">
+									<i class="fa fa-comments"></i>
+								</div>
+								<div class="article-paragraph">
+									{{content}}
+								</div>
+								<div class="article-paragraph-comment-wrapper">
+									<div class="article-paragraph-comment-container">
+										<h4 class="no-margin">Comments</h4>
+										{{^comments}}<div class="no-article-small">No comment yet</div>{{/comments}}
+										<form class="pure-form comment-form">
+											<div class="labeled-divider">POST A COMMENT</div>
+											<textarea name="content"></textarea>
+											<div class="comment-form-frame">
+												<button class="pure-button">BACK</button>
+												<input type="submit" value="POST" class="right-floated pure-button">
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						{{/paragraphs}}
+						<div class="article-paragraphs-fade-placeholder"></div>
+					</div>
+				</div>
+				<div class="article-meta load-fade-in load-delay-3">
+					{{^read_count}}<span class="small-vert-dived">no read </span>{{/read_count}}
+					{{#read_count}}<span class="small-vert-dived">{{read_count}} read </span>{{/read_count}}
+					<span class="small-vert-dived">{{^comment_count}}no{{/comment_count}}{{#comment_count}}{{comment_count}}{{/comment_count}} comment </span>
+					by <a href="/user/{{author_id}}">{{username}}</a>
+				</div>
+				<hr class="grayed load-fade-in load-delay-3" />
+			</div>
+			<div class="load-fade-in load-delay-4" id="comments">
+				{{^comments}}<div class="no-article">No Comments yet :D</div>{{/comments}}
+				{{#has_comment}}
+					<div class="article-comments">
+						{{#comments}}
+							<div class="article-comment">
+								<a class="article-comment-usercard" href="/user/{{commenter_id}}">
+									<img id="user-avatar" src="{{avatar}}"></img>
+									<div class="usercard-username">{{username}}</div>
+								</a>
+								<div class="article-comment-content">{{content}}</div>
+								<span class="article-date">12-08 23:00</span>
+							</div>
+						{{/comments}}
+					</div>
+				{{/has_comment}}
+				<form class="pure-form comment-form article-comment-form" action="/blog/article/{{id}}/comment" method="post">
+					<div class="labeled-divider">POST A COMMENT</div>
+					<textarea name="content"></textarea>
+					<div class="comment-form-frame">
+						<button class="pure-button">BACK</button>
+						<input type="submit" value="POST" class="right-floated pure-button">
+					</div>
+				</form>
+			</div>
+		</div>
+		
+	</div>
+	
+</div>
+
+<div class="btn-back-to-top">
+	<a href="#jump-to-me">
+		<div class="btn-m">
+			<div><i class="fa fa-circle-o-notch fa-lg"></i></div>
+		</div>
+	</a>
+</div>
+
+<div id="footer">
+	<div id="footer-body">
+		Copyleft 2015 secondwtq lovejay-lovemusic#outlook.com
+	</div>
+</div>
+
+<script src="/static/external/jquery-2.1.4.js"></script>
+<!--<script src="/static/external/zepto.js"></script>-->
+<!--<script>jQuery = $;</script>-->
+<script src="/static/expressus.js"></script>
+
+<script>
+	
+	var switch_comment = function (wrapper) {
+		wrapper.toggleClass('paragraph-comment-show'); }
+	
+	$('.article-paragraph').on('click', function (e) {
+		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
+		
+	$('.paragraph-comment-btn').on('click', function (e) {
+		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
+
+	// stackoverflow.com/questions/25125560/prevent-parent-scroll-when-in-child-div
+	$('.article-paragraphs').on('mousewheel', function (e) {
+	    var event = e.originalEvent, d = event.wheelDelta || -event.detail;
+	    this.scrollTop += (d < 0 ? 1 : -1) * 30;
+	    e.preventDefault();
+	});
+	
+	// www.abeautifulsite.net/smoothly-scroll-to-an-element-without-a-jquery-plugin-2
+	$('a[href^="#"]').on('click', function (event) {
+		var target = $($(this).attr('href'));
+		if (target.length) {
+			event.preventDefault();
+			$('html, body').animate({ scrollTop: target.offset().top }, 400);
+		}
+	});
+</script>
+
+</body>
+</html>

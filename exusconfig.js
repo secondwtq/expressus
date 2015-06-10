@@ -1,5 +1,5 @@
 
-var config =  {
+var config = {
 	db_host: 'localhost',
 	db_port: 5432,
 	db_username: 'secondwtq',

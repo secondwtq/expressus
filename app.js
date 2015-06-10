@@ -39,64 +39,50 @@ app.use(function (err, req, res, next) {
 	res.status(500).send('Something broke!');
 });
 
-var route_blog = require('./routes/blog');
-var route_user = require('./routes/user');
-app.use('/blog', route_blog);
-app.use('/user', route_user);
-app.use('/static', express.static('static'));
-
 var exusdb = require('./exusdb');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-app.use(session({ secret: "I'm a secret.", cookie: { maxAge: 60000 } }));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(session({
+	secret: "I'm a secret.",
+	rolling: true,
+	resave: true,
+	maxAge: new Date(Date.now() + 3600000)
+}));
 
 exusdb.connect();
 
-passport.use('local', new LocalStrategy(function (username, passwd, done) {
-	console.log('passport - local: authing user ', username);
-	exusdb.db().one(
-		"select * from stakeholder where username=$1 and passwd=$2",[username, passwd]).
-	then(function (data) {
-		console.log('done');
-		return done(null, data);
-	}, function (reason) {
-		if (reason.trim() === 'No data returned from the query.') {
-			return done(null, false, { message: 'Username and password doesnot match.' });
-		} else {
-			return done(null, false, { message: reason }); }
-	});
-}));
+passport.use(new LocalStrategy(
+	{ usernameField: 'username', passwordField: 'passwd' },
+	function (username, passwd, done) {
+		exusdb.db().one(
+			"select * from stakeholder where username=$1 and passwd=$2", [ username, passwd ]).
+		then(function (data) {
+			return done(null, data);
+		}, function (reason) {
+			if (reason.trim() === 'No data returned from the query.') {
+				return done(null, false, { message: 'Username and password doesnot match.' });
+			} else {
+				return done(null, false, { message: reason }); }
+		});
+	}));
 
 passport.serializeUser(function (user, done) {
-	console.log('passport: serializing user ', user);
-	done(null, user);
-	// var args = [user.username, user.passwd, user.displayname, user.email, user.register_time];
-	// exusdb.db().one(
-	// 	"insert into stakeholder (username, passwd, displayname, email, register_time) values ($1, $2, $3, $4, $5) returning id",
-	// 	args).then(function(data) {
-	// 		console.log("User Serialized: ", data.id, data.username);
-	// 		done(null, user);
-	// 	}, function (reason) {
-	// 		console.log("User Serialize Failed: ", reason);
-	// 		done(reason, user);
-	// 	});
-});
-
+	console.log('passport: serializing user ', user.username);
+	done(null, user); });
 passport.deserializeUser(function (user, done) {
-	console.log('passport: deserialize user ', user);
-	done(null, user);
-	// exusdb.db().one(
-	// 	"select * from stakeholder where username=$1 and passwd=$2",
-	// 	[user.username, user.passwd]).then(function (data) {
-			
-	// 	}, function (reason) {
-			
-	// 	});
-});
+	console.log('passport: deserialize user ', user.username);
+	done(null, user); });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+var route_blog = require('./routes/blog');
+var route_user = require('./routes/user');
+app.use('/blog', route_blog);
+app.use('/user', route_user);
+app.use('/static', express.static('static'));
 
 var server = app.listen(process.env.PORT || 8000, function () {
 	var host = server.address().address;
