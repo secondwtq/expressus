@@ -15,7 +15,7 @@ router.get('/register', function (req, res, next) {
 	if (req.user) {
 		return res.redirect('/blog'); }
 	
-	res.render('user_register', { }); });
+	res.render('user_register', { layout: 'subpage' }); });
 	
 router.post('/register', function (req, res, next) {
 	if (req.user) {
@@ -23,13 +23,15 @@ router.post('/register', function (req, res, next) {
 });
 
 router.get('/login', function (req, res, next) {
-	res.render('user_login', { redirecturl: req.query.redirecturl }); });
+	res.render('user_login', {
+		layout: 'subpage', redirecturl: req.query.redirecturl }); });
 
 router.post('/login', function (req, res, next) {
 	passport.authenticate('local', function (err, user, info) {
 		if (err) { return next(err); }
 		
 		if (!user) { return res.render('user_login', {
+			layout: 'subpage',
 			failed: true,
 			failed_message: info.message,
 			last_username: req.body.username
@@ -57,7 +59,7 @@ router.get('/:id', function (req, res, next) {
 	exusdb.db().one('select * from stakeholder where id=$1', [ user_id ])
 		.then(function (data) {
 			res.render('user_info',
-				{ user: data });
+				{ layout: 'subpage', user: data });
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
 				res.status(404).send('404: Page not found'); }

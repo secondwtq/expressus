@@ -1,5 +1,7 @@
 /// <reference path="typings/node/node.d.ts"/>
 
+'use strict';
+
 var path = require('path');
 var config = require('./exusconfig');
 
@@ -9,6 +11,8 @@ var exus_env = {
 
 var express = require('express');
 var app = express();
+
+var exphbs = require('express-handlebars');
 
 var logger = require('morgan');
 var cookie_parser = require('cookie-parser');
@@ -27,8 +31,11 @@ app.get('/hello', function (req, res) {
 // var basicAuth = require('basic-auth-connect');
 // app.use(basicAuth('testUser', 'testPass'));
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hjs');
+// app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', exphbs({
+	defaultLayout: 'main'
+}));
+app.set('view engine', 'handlebars');
 app.use(logger('dev'));
 app.use(cookie_parser());
 app.use(body_parser.urlencoded({ extended: true }));
