@@ -11,6 +11,25 @@ body {
 	color: ghostwhite;
 }
 
+a {
+	color: #eee;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ddd;
+	text-decoration: underline; }
+	
+a:active {
+	color: #ccc; }
+	
+.top-anchor {
+	color: #777; }
+	
+.top-anchor:hover {
+	text-decoration: none;
+	color: #555; }
+
 html.subpage-html {
 	height: 100%; }
 
@@ -31,8 +50,7 @@ body.subpage-body {
 }
 
 .subpage-title {
-	font-weight: normal;
-}
+	font-weight: normal; }
 
 .subpage-container {
 	position: relative;
@@ -177,15 +195,26 @@ hr.grayed {
 	font-size: 0.8em;
 }
 
-#user-avatar {
+#user-avatar,
+.user-avatar-small {
 	display: inline-block;
+	background-color: gray;
+	margin-left: 1em;
+	border-radius: 50%;
+}
+
+#user-avatar {
 	width: 42px;
 	height: 42px;
 	max-width: 42px;
 	max-height: 42px;
-	background-color: gray;
-	margin-left: 1em;
-	border-radius: 50%;
+}
+
+.user-avatar-small {
+	width: 32px;
+	height: 32px;
+	max-width: 32px;
+	max-height: 32px;
 }
 
 .user-avatar-large {
@@ -451,7 +480,8 @@ hr.grayed {
 	transition: all 0.5s ease-in-out;
 }
 	
-.article-comment {
+.article-comment,
+.article-paragraph-comment {
 	display: -webkit-flex;
 	display: flex;
 	align-items: center;
@@ -459,28 +489,39 @@ hr.grayed {
 	border-left: 1px dotted lightgray;
 }
 
+.article-paragraph-comment {
+	padding-left: 0.5em; }
+
 .article-comment + .article-comment {
 	padding-top: 1em; }
 
-.article-comment-usercard {
+.article-comment-usercard,
+.article-paragraph-comment-usercard {
 	text-align: center;
 	padding-right: 1em;
 	flex-shrink: 0;
 }
 
-.article-comment-usercard img {
+.article-paragraph-comment-usercard {
+	padding-right: 0.5em; }
+
+.article-comment-usercard img,
+.article-paragraph-comment-usercard img {
 	margin: 0 !important; }
 
 .article-comment-usercard .usercard-username {
-	font-size: small;
-}
+	font-size: small; }
+	
+.article-paragraph-comment-usercard .usercard-username {
+	font-size: xx-small; }
 
 .article-comment-content {
 	color: lightgray;
 	font-size: small;
 }
 
-.article-comment .article-date {
+.article-comment .article-date,
+.article-paragraph-comment .article-date {
 	align-self: flex-start;
 	flex-grow: 1;
 	flex-shrink: 0;
