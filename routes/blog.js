@@ -43,6 +43,11 @@ router.get('/article/:id', function (req, res, next) {
 			return exusdb.db().many("select * from comment_detail where article_id=$1 order by comment_date desc", [ args.id ]);
 		}).then(function (data) {
 			args.comments = _.filter(data, function (post) { return post.comment_type == 'article'; });
+			var comments_paras = _(data).filter(function (post) { return post.comment_type == 'paragraph'; });
+			for (var p in args.paragraphs) {
+				args.paragraphs[p].comments = _(comments_paras).filter(function (comment) { return comment.paragraph_id === args.paragraphs[p].id; });
+				args.paragraphs[p].comment_count = _(args.paragraphs[p].comments).size();
+			}
 			res.render('blog_article', args);
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
@@ -51,18 +56,25 @@ router.get('/article/:id', function (req, res, next) {
 		});
 });
 
+router.post('/article/:article_id/paragraph/:paragraph_id/comment', function (req, res, next) {
+	if (req.user) {
+		var parid = parseInt(req.params.paragraph_id);
+		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'paragraph', parid ];
+		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type, paragraph_id) values ($1, $2, $3, $4, $5, $6)",
+			params).then(function () {
+				res.redirect('/blog/article/' + req.params.article_id + '#paragraph-' + parid);
+			}, function (reason) { res.status(500).send(reason); });
+	} else { res.status(403).send('403: Forbidden'); }
+});
+
 router.post('/article/:article_id/comment', function (req, res, next) {
 	if (req.user) {
 		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'article' ];
 		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type) values ($1, $2, $3, $4, $5)",
 			params).then(function () {
 				res.redirect('/blog/article/' + req.params.article_id + '#comments');
-			}, function (reason) {
-				res.status(500).send(reason);
-			});
-	} else {
-		res.status(403).send('403: Forbidden');
-	}
+			}, function (reason) { res.status(500).send(reason); });
+	} else { res.status(403).send('403: Forbidden'); }
 });
 
 module.exports = router;

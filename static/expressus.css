@@ -266,6 +266,7 @@ hr.grayed {
 }
 
 #author-summary #author-name {
+	display: block;
 	padding: 0.5em;
 }
 

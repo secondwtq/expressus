@@ -12,7 +12,7 @@
 			<div id="author-intro">
 				<a href="/user/{{author_id}}"><img id="author-avatar" src="{{avatar}}"></img></a>
 				<div id="author-summary">
-					<div id="author-name"><a href="/user/{{author_id}}">{{username}}</a></div>
+					<a href="/user/{{author_id}}" id="author-name">{{username}}</a>
 					<div class="author-text">{{user_title}}</div>
 				</div>
 			</div>
@@ -43,9 +43,7 @@
 				    </ul>
 				</div>
 				<!-- else -->
-				<div class="not-logged-in">
-					<a href="/user/login?redirecturl=/blog/article/{{id}}" class="top-anchor">Login</a>
-				</div>
+				<a href="/user/login?redirecturl=/blog/article/{{id}}" class=" not-logged-in top-anchor">Login</a>
 			</div>
 			<div class="center-top-inner">
 				<nav class="pure-menu pure-menu-horizontal">
@@ -67,7 +65,7 @@
 					<div class="article-paragraphs">
 						<div class="article-paragraphs-fade-placeholder"></div>
 						{{#paragraphs}}
-							<div class="article-paragraph-wrapper">
+							<div class="article-paragraph-wrapper" id="paragraph-{{id}}">
 								{{#have_comment}}
 									<div class="right-floated para-comment-num">0</div>
 								{{/have_comment}}
@@ -94,7 +92,7 @@
 											{{/comments}}
 										</div>
 										{{^comments}}<div class="no-article-small">No comment yet</div>{{/comments}}
-										<form class="pure-form comment-form">
+										<form class="pure-form comment-form" method="post" action="/blog/article/{{../id}}/paragraph/{{id}}/comment">
 											<div class="labeled-divider">POST A COMMENT</div>
 											<textarea name="content"></textarea>
 											<div class="comment-form-frame">
@@ -120,44 +118,40 @@
 				</div>
 				<hr class="grayed load-fade-in load-delay-3" />
 			</div>
-			<div class="load-fade-in load-delay-4" id="comments">
-				{{^comments}}<div class="no-article">No Comments yet :D</div>{{/comments}}
-				{{#has_comment}}
-					<div class="article-comments">
-						{{#comments}}
-							<div class="article-comment">
-								<a class="article-comment-usercard" href="/user/{{commenter_id}}">
-									<img id="user-avatar" src="{{avatar}}"></img>
-									<div class="usercard-username">{{username}}</div>
-								</a>
-								<div class="article-comment-content">{{content}}</div>
-								<span class="article-date">12-08 23:00</span>
-							</div>
-						{{/comments}}
-					</div>
-				{{/has_comment}}
-				<form class="pure-form comment-form article-comment-form" action="/blog/article/{{id}}/comment" method="post">
-					<div class="labeled-divider">POST A COMMENT</div>
-					<textarea name="content"></textarea>
-					<div class="comment-form-frame">
-						<button class="pure-button">BACK</button>
-						<input type="submit" value="POST" class="right-floated pure-button">
-					</div>
-				</form>
-			</div>
+			{{^comments}}
+				<div class="no-article load-fade-in load-delay-4">No Comments yet :D</div>
+			{{/comments}}
+			{{#has_comment}}
+				<div class="article-comments load-fade-in load-delay-4">
+					{{#comments}}
+						<div class="article-comment">
+							<a class="article-comment-usercard" href="/user/{{commenter_id}}">
+								<img id="user-avatar" src="{{avatar}}"></img>
+								<div class="usercard-username">{{username}}</div>
+							</a>
+							<div class="article-comment-content">{{content}}</div>
+							<span class="article-date">12-08 23:00</span>
+						</div>
+					{{/comments}}
+				</div>
+			{{/has_comment}}
+			<form class="pure-form comment-form article-comment-form load-fade-in load-delay-4" action="/blog/article/{{id}}/comment" method="post">
+				<div class="labeled-divider">POST A COMMENT</div>
+				<textarea name="content"></textarea>
+				<div class="comment-form-frame">
+					<button class="pure-button">BACK</button>
+					<input type="submit" value="POST" class="right-floated pure-button">
+				</div>
+			</form>
 		</div>
 		
 	</div>
 	
 </div>
 
-<div class="btn-back-to-top">
-	<a href="#jump-to-me">
-		<div class="btn-m">
-			<div><i class="fa fa-circle-o-notch fa-lg"></i></div>
-		</div>
-	</a>
-</div>
+<a href="#jump-to-me" class="btn-back-to-top btn-m">
+	<i class="fa fa-circle-o-notch fa-lg"></i>
+</a>
 
 <script src="/static/external/jquery-2.1.4.js"></script>
 <!--<script src="/static/external/zepto.js"></script>-->
