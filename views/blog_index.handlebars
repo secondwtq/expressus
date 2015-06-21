@@ -68,9 +68,18 @@
 							{{summary}}
 						</div>
 						<div class="article-meta">
-							{{^read_count}}<span class="small-vert-dived">no read </span>{{/read_count}}
-							{{#read_count}}<span class="small-vert-dived">{{read_count}} read </span>{{/read_count}}
-							<span class="small-vert-dived">{{^comment_count}}no{{/comment_count}}{{#comment_count}}{{comment_count}}{{/comment_count}} comment </span>
+							{{#if read_count}}
+								<span class="small-vert-dived">{{read_count}} read </span>
+							{{else}}
+								<span class="small-vert-dived">no read </span>
+							{{/if}}
+							<span class="small-vert-dived">
+								{{#if comment_count}}
+									{{comment_count}}
+								{{else}}
+									{{^comment_count}}no{{/comment_count}}
+								{{/if}}
+								{{plural_auto 'comment' comment_count}} </span>
 							by <a href="/user/{{author_id}}">{{username}}</a>
 						</div>
 					</div>

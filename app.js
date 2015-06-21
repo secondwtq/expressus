@@ -28,13 +28,20 @@ var method_override = require('method-override');
 app.get('/hello', function (req, res) {
 	res.send('Hellor Worlder!'); });
 
-// var basicAuth = require('basic-auth-connect');
-// app.use(basicAuth('testUser', 'testPass'));
-
 // app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({
-	defaultLayout: 'main'
-}));
+
+var hbs = exphbs.create({
+	defaultLayout: 'main',
+	helpers: {
+		plural_auto: function (org, count) {
+			if (count > 1) {
+				return org + 's'; }
+			return org;
+		}
+	}
+});
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.use(logger('dev'));
 app.use(cookie_parser());

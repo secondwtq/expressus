@@ -23,7 +23,7 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-	exusdb.db().any("select * from article_username")
+	exusdb.db().any("select * from article_detail")
 		.then(function (data) {
 			res.render('blog_index', { articles: data });
 		}, function (reason) {
