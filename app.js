@@ -34,8 +34,7 @@ var hbs = exphbs.create({
 	defaultLayout: 'main',
 	helpers: {
 		plural_auto: function (org, count) {
-			if (count > 1) {
-				return org + 's'; }
+			if (count > 1) { return org + 's'; }
 			return org;
 		}
 	}

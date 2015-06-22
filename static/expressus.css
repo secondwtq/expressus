@@ -13,25 +13,24 @@ body {
 
 a {
 	color: #eee;
-	text-decoration: none;
-}
-
+	text-decoration: none; }
 a:hover {
 	color: #ddd;
 	text-decoration: underline; }
+a:active { color: #ccc; }
 	
-a:active {
-	color: #ccc; }
+a.anchor-sp { color: white; }
+a.anchor-sp:hover {
+	color: white;
+	text-decoration: none; }
+a.anchor-sp:hover { color: white; }
 	
-.top-anchor {
-	color: #777; }
-	
+.top-anchor { color: #777; }
 .top-anchor:hover {
 	text-decoration: none;
 	color: #555; }
 
-html.subpage-html {
-	height: 100%; }
+html.subpage-html { height: 100%; }
 
 body.subpage-body {
 	display: -webkit-flex;
@@ -360,18 +359,16 @@ hr.grayed {
 	top: auto;
 	bottom: -2.5em; }
 	
-.article-paragraphs-fade-placeholder {
-	padding: 0.75em; }
-	
-.article-paragraph-wrapper .paragraph-comment-btn {
+.article-paragraphs-fade-placeholder { padding: 0.75em; }
+
+.article-parawrap .para-comment-btn {
 	opacity: 0.0;
 	transition: all 0.1s ease-in-out;
 	cursor: pointer;
 }
 
-.article-paragraph-wrapper:hover .paragraph-comment-btn {
-	opacity: 1.0;
-}
+.article-parawrap:hover .para-comment-btn {
+	opacity: 1.0; }
 
 .para-comment-num {
 	font-size: xx-small;

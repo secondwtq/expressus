@@ -65,11 +65,11 @@
 					<div class="article-paragraphs">
 						<div class="article-paragraphs-fade-placeholder"></div>
 						{{#paragraphs}}
-							<div class="article-paragraph-wrapper" id="paragraph-{{id}}">
-								{{#have_comment}}
-									<div class="right-floated para-comment-num">0</div>
-								{{/have_comment}}
-								<div class="paragraph-comment-btn right-floated">
+							<div class="article-parawrap" id="paragraph-{{id}}">
+								{{#if comment_count}}
+									<div class="right-floated para-comment-num">{{comment_count}}</div>
+								{{/if}}
+								<div class="right-floated para-comment-btn">
 									<i class="fa fa-comments"></i>
 								</div>
 								<div class="article-paragraph">
@@ -149,7 +149,7 @@
 	
 </div>
 
-<a href="#jump-to-me" class="btn-back-to-top btn-m">
+<a href="#jump-to-me" class="btn-back-to-top btn-m anchor-sp">
 	<i class="fa fa-circle-o-notch fa-lg"></i>
 </a>
 
@@ -166,7 +166,7 @@
 	$('.article-paragraph').on('click', function (e) {
 		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
 		
-	$('.paragraph-comment-btn').on('click', function (e) {
+	$('.para-comment-btn').on('click', function (e) {
 		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
 
 	// stackoverflow.com/questions/25125560/prevent-parent-scroll-when-in-child-div

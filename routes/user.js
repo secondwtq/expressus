@@ -9,18 +9,13 @@ var redirect_def = function (redirect_url) {
 	var redirect_to = redirect_url;
 	if (!redirect_to) { redirect_to = '/blog'; }
 	return redirect_to;
-}
+};
 
 router.get('/register', function (req, res, next) {
 	if (req.user) {
 		return res.redirect('/blog'); }
 	
 	res.render('user_register', { layout: 'subpage' }); });
-	
-router.post('/register', function (req, res, next) {
-	if (req.user) {
-		return res.redirect('/blog'); }
-});
 
 router.get('/login', function (req, res, next) {
 	res.render('user_login', {
@@ -34,7 +29,8 @@ router.post('/login', function (req, res, next) {
 			layout: 'subpage',
 			failed: true,
 			failed_message: info.message,
-			last_username: req.body.username
+			last_username: req.body.username,
+			redirecturl: req.body.redirecturl
 		}); }
 		
 		req.login(user, function (err) {
@@ -51,6 +47,20 @@ router.post('/logout', function (req, res, next) {
 		return res.redirect(redirect_def(req.body.redirecturl));
 	} else {
 		
+	}
+});
+
+router.post('/register', function (req, res, next) {
+	console.log('enter...');
+	if (req.user) {
+		return res.status(403).send('403: Forbidden');
+	} else {
+		console.log('registering');
+		exusdb.db().none("insert into stakeholder(username, passwd, email, register_time) values ($1, $2, $3, $4)",
+			[req.body.username, req.body.passwd, req.body.email, new Date()]).
+		then(function () {
+			return res.redirect('/user/login');
+		}, function (reason) { return res.status(500).send(reason); });
 	}
 });
 
