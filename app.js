@@ -13,6 +13,8 @@ var express = require('express');
 var app = express();
 
 var exphbs = require('express-handlebars');
+var moment = require('moment');
+// moment().utcOffset(8);
 
 var logger = require('morgan');
 var cookie_parser = require('cookie-parser');
@@ -36,7 +38,15 @@ var hbs = exphbs.create({
 		plural_auto: function (org, count) {
 			if (count > 1) { return org + 's'; }
 			return org;
-		}
+		},
+		datefmt: function (fmt, d) {
+			return moment(d).format(fmt); },
+		daterel: function (d) {
+			return moment(d).fromNow(); },
+		article_datefmt: function (d) {
+			return moment(d).format('L'); },
+		comment_datefmt: function (d) {
+			return moment(d).format('L'); }
 	}
 });
 

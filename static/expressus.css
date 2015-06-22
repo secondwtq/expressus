@@ -498,6 +498,8 @@ hr.grayed {
 	text-align: center;
 	padding-right: 1em;
 	flex-shrink: 0;
+	min-width: 5em;
+	max-width: 5em;
 }
 
 .article-paragraph-comment-usercard {

@@ -44,6 +44,7 @@ router.get('/article/:id', function (req, res, next) {
 		}).then(function (data) {
 			args.comments = _.filter(data, function (post) { return post.comment_type == 'article'; });
 			var comments_paras = _(data).filter(function (post) { return post.comment_type == 'paragraph'; });
+			console.log(comments_paras);
 			for (var p in args.paragraphs) {
 				args.paragraphs[p].comments = _(comments_paras).filter(function (comment) { return comment.paragraph_id === args.paragraphs[p].id; });
 				args.paragraphs[p].comment_count = _(args.paragraphs[p].comments).size();
