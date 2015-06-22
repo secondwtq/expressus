@@ -149,9 +149,14 @@
 	
 </div>
 
-<a href="#jump-to-me" class="btn-back-to-top btn-m anchor-sp">
-	<i class="fa fa-circle-o-notch fa-lg"></i>
-</a>
+<div class="btn-back-to-top">
+	<a id="to-perfect-view" href="#jump-to-me" class="btn-m anchor-sp">
+		<i class="fa fa-circle-o-notch fa-lg"></i>
+	</a>
+	<a class="btn-m back-button anchor-sp">
+		<i class="fa fa-chevron-left"></i>
+	</a>
+</div>
 
 <script src="/static/external/jquery-2.1.4.js"></script>
 <!--<script src="/static/external/zepto.js"></script>-->
@@ -184,4 +189,8 @@
 			$('html, body').animate({ scrollTop: target.offset().top }, 400);
 		}
 	});
+	
+	$(function () {
+		if (!window.location.hash)
+			$('#to-perfect-view').click(); });
 </script>

@@ -351,7 +351,7 @@ hr.grayed {
     left: 0;
 	pointer-events: none;
 	background: linear-gradient(to bottom, transparent, rgb(115, 120, 126) 2em);
-	background-image: radial-gradient(ellipse farthest-corner, rgb(115, 120, 126) 20%, transparent 100%);
+	background-image: radial-gradient(ellipse farthest-corner, rgba(115, 120, 126, 255) 20%, rgba(115, 120, 126, 0) 100%);
 	top: -2.5em;
 }
 
@@ -522,6 +522,9 @@ hr.grayed {
 
 .article-comment .article-date,
 .article-paragraph-comment .article-date {
+	-webkit-align-self: flex-start;
+	-webkit-flex-grow: 1;
+	-webkit-flex-shrink: 0;
 	align-self: flex-start;
 	flex-grow: 1;
 	flex-shrink: 0;
@@ -531,6 +534,8 @@ hr.grayed {
 @media screen and (max-width: 767px) {
 	
 	.article-comment .article-date {
+		-webkit-flex-shrink: initial;
+		-webkit-flex-basis: 128px;
 		flex-shrink: initial;
 		flex-basis: 128px;
 	}
@@ -573,6 +578,27 @@ hr.grayed {
 	transform: scale(1.1);
 	box-shadow: 0 6px 0.7em rgba(0, 0, 0, 0.6); }
 
+* > .back-button {
+	position: absolute;
+	top: 50%;
+	opacity: 0;
+	-webkit-transform: scale(0.5) translate3d(0, -100%, 0);
+	transform: scale(0.5) translate3d(0, -100%, 0);
+	width: 2em;
+	height: 2em;
+	border-radius: 1em;
+	right: 0;
+	pointer-events: none;
+}
+
+*:hover > .back-button {
+	opacity: 1;
+	-webkit-transform: scale(1) translate3d(0, -50%, 0);
+	transform: scale(1) translate3d(0, -50%, 0);
+	right: 90%;
+	pointer-events: auto;
+}
+
 @media screen and (max-width: 767px) {
 	.btn-back-to-top {
 		position: fixed;
@@ -581,8 +607,6 @@ hr.grayed {
 	}
 	
 	.btn-m {
-		width: 3em;
-		height: 3em;
 		border-radius: 0 3em 0 0;
 	}
 	
@@ -590,6 +614,26 @@ hr.grayed {
 		margin-top: 0.5em;
 		margin-right: 0.5em;
 	}
+	
+	* > .back-button {
+		top: 50%;
+		opacity: 0;
+		border-radius: 1em;
+		-webkit-transform: scale(0.5) translate3d(100%, 0, 0);
+		transform: scale(0.5) translate3d(100%, 0, 0);
+		right: 50%;
+		bottom: 0;
+		top: initial;
+	}
+	
+	*:hover > .back-button {
+		-webkit-transform: scale(1) translate3d(50%, 0, 0);
+		transform: scale(1) translate3d(50%, 0, 0);
+		bottom: 90%;
+		right: 50%;
+	}
+	
+	.back-button i { margin: auto; }
 }
 
 #footer {
