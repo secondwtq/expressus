@@ -4,6 +4,7 @@ var router = express.Router();
 
 var _ = require('underscore');
 var exusdb = require('../exusdb');
+var user = require('./user');
 
 var marked = require('marked');
 marked.setOptions({
@@ -62,7 +63,7 @@ router.get('/article/:id', function (req, res, next) {
 		});
 });
 
-router.post('/article/:article_id/paragraph/:paragraph_id/comment', function (req, res, next) {
+router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
 	if (req.user) {
 		var parid = parseInt(req.params.paragraph_id);
 		if (req.body.use_markdown) {
@@ -78,7 +79,7 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', function (re
 	} else { res.status(403).send('403: Forbidden'); }
 });
 
-router.post('/article/:article_id/comment', function (req, res, next) {
+router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
 	if (req.user) {
 		if (req.body.use_markdown) {
 			req.body.content = marked(req.body.content);

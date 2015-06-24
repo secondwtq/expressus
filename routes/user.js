@@ -2,13 +2,25 @@
 var express = require('express');
 var router = express.Router();
 
-var exusdb = require('../exusdb');
+var _ = require('underscore');
 var passport = require('passport');
+
+var exusdb = require('../exusdb');
+
+var allowed_setting_field = [ 'title', 'displayname' ];
+var privilege_user_update = [ 'admin' ];
 
 var redirect_def = function (redirect_url) {
 	var redirect_to = redirect_url;
 	if (!redirect_to) { redirect_to = '/blog'; }
 	return redirect_to;
+};
+
+var authed = function (req, res, next) {
+	if (req.user) {
+		return next(); }
+	var redir = req.query.redirecturl || req.body.redirecturl || req.path;
+	res.redirect('/user/login?redirecturl=' + redir);
 };
 
 router.get('/register', function (req, res, next) {
@@ -62,11 +74,31 @@ router.post('/register', function (req, res, next) {
 	}
 });
 
+var can_modify_settings = function (user, target_id) {
+	if (user === undefined) { return false; }
+	return user.id == target_id || _(privilege_user_update).contains(user.privilege); };
+
 router.get('/:id', function (req, res, next) {
 	var user_id = parseInt(req.params.id);
 	exusdb.db().one('select * from stakeholder where id=$1', [ user_id ])
 		.then(function (data) {
 			res.render('user_info',
+				{ layout: 'subpage', user: data,
+					display_settings: can_modify_settings(req.user, user_id) });
+		}, function (reason) {
+			if (exusdb.error.not_found(reason)) {
+				res.status(404).send('404: Page not found'); }
+			else { res.send(toString(reason), 500); }
+		});
+});
+
+router.get('/:id/settings', authed, function (req, res, next) {
+	var user_id = parseInt(req.params.id);
+	if (!can_modify_settings(req.user, user_id)) {
+		return res.status(403).send('403:Forbidden'); }
+	exusdb.db().one('select * from stakeholder where id=$1', [ user_id ])
+		.then(function (data) {
+			res.render('user_settings',
 				{ layout: 'subpage', user: data });
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
@@ -75,4 +107,12 @@ router.get('/:id', function (req, res, next) {
 		});
 });
 
-module.exports = router;
+router.post('/:id/settings', function (req, res, next) {
+	var user_id = parseInt(req.params.id);
+	
+});
+
+module.exports = {
+	router: router,
+	authed: authed
+};

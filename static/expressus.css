@@ -64,7 +64,9 @@ body.subpage-body {
 .ex-hide-by-default { display: none; }
 .center-aligned { text-align: center !important; }
 .right-floated { float: right !important; }
-	
+.ex-inline { display: inline-block !important; }
+
+.ex-smaller { font-size: smaller; }
 .ex-small { font-size: small; }
 	
 .halftrans { opacity: 0.5; }

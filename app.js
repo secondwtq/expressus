@@ -102,9 +102,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 var route_blog = require('./routes/blog');
-var route_user = require('./routes/user');
+var user = require('./routes/user');
 app.use('/blog', route_blog);
-app.use('/user', route_user);
+app.use('/user', user.router);
 app.use('/static', express.static('static'));
 
 var server = app.listen(process.env.PORT || 8000, function () {

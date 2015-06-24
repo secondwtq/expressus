@@ -1,0 +1,24 @@
+<div class="subpage-container center-aligned">
+	<h3 class="subpage-title">
+		<span class="ex-smaller">Settings for </span>&lt;{{user.username}}&gt;
+	</h3>
+	<hr class="dashed" />
+	<form class="pure-form pure-form-stacked" method="POST" target="/user/{{user.id}}/settings">
+		<fieldset>
+		<label for="ctl-email">Email</label>
+		<input name="email" id="ctl-email" readonly value="{{user.email}}" class="login-input pure-input-rounded">
+		<div>
+			<input name="public-email" id="ctl-pubemail" type="checkbox">
+			<label for="ctl-pubemail" class="ex-inline">Show Email In Profile</label>
+		</div>
+		<label for="ctl-regtime">Register Time</label>
+		<input name="register_time" id="ctl-regtime" readonly value="{{datefmt 'L' user.register_time}}" class="login-input pure-input-rounded">
+		<label for="ctl-displayname">Display Name</label>
+		<input name="displayname" id="ctl-displayname" class="login-input pure-input-rounded" value="{{user.displayname}}">
+		<label for="ctl-title">Description</label>
+		<input name="title" id="ctl-title" class="login-input pure-input-rounded" value="{{user.title}}">
+		<br />
+		<button type="submit" class="pure-button">Submit</button>
+		</fieldset>
+	</form>
+</div>

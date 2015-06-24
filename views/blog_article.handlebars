@@ -32,9 +32,12 @@
 								<img id="user-avatar" src="{{user.avatar}}"></img>
 							</a>
 				            <ul class="pure-menu-children">
+								<li class="pure-menu-item">
+									<a class="pure-menu-link" href="/user/{{user.id}}/settings">Settings</a>
+								</li>
 				                <li class="pure-menu-item">
 									<form action="/user/logout" method="post" id="form-logout">
-										<input name="redirecturl" type="text" class="ex-hidden" value="/blog">
+										<input name="redirecturl" type="hidden" value="/blog/article/{{id}}">
 										<a class="pure-menu-link" href="#" onclick="document.getElementById('form-logout').submit();">Logout</a>
 									</form>
 								</li>
@@ -98,8 +101,8 @@
 											<div class="comment-form-frame">
 												<button class="pure-button">BACK</button>
 												<span class="checkbox-switch checkbox-switch-md">
-													<input type="checkbox" name="use_markdown" id="checkbox-markdown" class="js-focus-textarea">
-													<label for="checkbox-markdown">Use Markdown</label>
+													<input type="checkbox" name="use_markdown" id="checkbox-markdown-{{id}}" class="js-focus-textarea">
+													<label for="checkbox-markdown-{{id}}">Use Markdown</label>
 												</span>
 												<input type="submit" value="POST" class="right-floated pure-button">
 											</div>
@@ -148,6 +151,7 @@
 						<input type="checkbox" name="use_markdown" id="checkbox-markdown-article" class="js-focus-textarea">
 						<label for="checkbox-markdown-article">Use Markdown</label>
 					</span>
+					<input type="hidden" name="redirecturl" value="/blog/article/{{id}}">
 					<input type="submit" value="POST" class="right-floated pure-button">
 				</div>
 			</form>
