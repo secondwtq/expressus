@@ -51,11 +51,9 @@ router.post('/logout', function (req, res, next) {
 });
 
 router.post('/register', function (req, res, next) {
-	console.log('enter...');
 	if (req.user) {
 		return res.status(403).send('403: Forbidden');
 	} else {
-		console.log('registering');
 		exusdb.db().none("insert into stakeholder(username, passwd, email, register_time) values ($1, $2, $3, $4)",
 			[req.body.username, req.body.passwd, req.body.email, new Date()]).
 		then(function () {

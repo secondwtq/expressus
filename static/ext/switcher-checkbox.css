@@ -1,0 +1,34 @@
+
+.checkbox-switch { position: relative; }
+
+.checkbox-switch label,
+.checkbox-switch input { visibility: hidden; }
+
+.checkbox-switch label:before {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	font-size: small;
+	background-color: rgba(0, 0, 0, 0.1);
+	padding: 0.2em 0.5em;
+	border-radius: 0.8em;
+	color: lightgray;
+	visibility: visible;
+	cursor: pointer;
+	content: 'Not Checked';
+}
+
+.checkbox-switch input:checked + label:before { content: 'Checked'; }
+
+.checkbox-switch label:hover:before {
+	color: white;
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.checkbox-switch label:active:before {
+	color: #ccc;
+	background-color: rgba(0, 0, 0, 0.15);
+}
+
+.checkbox-switch-md label:before { content: 'Text'; }
+.checkbox-switch-md input:checked + label:before { content: 'Markdown'; }

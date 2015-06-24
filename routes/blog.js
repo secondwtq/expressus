@@ -5,6 +5,12 @@ var router = express.Router();
 var _ = require('underscore');
 var exusdb = require('../exusdb');
 
+var marked = require('marked');
+marked.setOptions({
+	gfm: true, tables: true,
+	sanitize: true,
+});
+
 router.use(function (req, res, next) {
 	var logged_in_class = function () {
 		if (req.user === undefined) { return 'has-not-logged-in'; }
@@ -44,7 +50,6 @@ router.get('/article/:id', function (req, res, next) {
 		}).then(function (data) {
 			args.comments = _.filter(data, function (post) { return post.comment_type == 'article'; });
 			var comments_paras = _(data).filter(function (post) { return post.comment_type == 'paragraph'; });
-			console.log(comments_paras);
 			for (var p in args.paragraphs) {
 				args.paragraphs[p].comments = _(comments_paras).filter(function (comment) { return comment.paragraph_id === args.paragraphs[p].id; });
 				args.paragraphs[p].comment_count = _(args.paragraphs[p].comments).size();
@@ -60,6 +65,11 @@ router.get('/article/:id', function (req, res, next) {
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', function (req, res, next) {
 	if (req.user) {
 		var parid = parseInt(req.params.paragraph_id);
+		if (req.body.use_markdown) {
+			req.body.content = marked(req.body.content);
+		} else {
+			
+		}
 		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'paragraph', parid ];
 		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type, paragraph_id) values ($1, $2, $3, $4, $5, $6)",
 			params).then(function () {
@@ -70,6 +80,11 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', function (re
 
 router.post('/article/:article_id/comment', function (req, res, next) {
 	if (req.user) {
+		if (req.body.use_markdown) {
+			req.body.content = marked(req.body.content);
+		} else {
+			
+		}
 		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'article' ];
 		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type) values ($1, $2, $3, $4, $5)",
 			params).then(function () {

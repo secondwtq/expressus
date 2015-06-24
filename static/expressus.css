@@ -60,26 +60,16 @@ body.subpage-body {
 	color: gray;
 }
 
-.ex-hidden {
-	display: none !important; }
+.ex-hidden { display: none !important; }
+.ex-hide-by-default { display: none; }
+.center-aligned { text-align: center !important; }
+.right-floated { float: right !important; }
 	
-.ex-hide-by-default {
-	display: none; }
-
-.center-aligned {
-	text-align: center !important; }
+.ex-small { font-size: small; }
 	
-.right-floated {
-	float: right !important; }
+.halftrans { opacity: 0.5; }
 	
-.ex-small {
-	font-size: small; }
-	
-.halftrans {
-	opacity: 0.5; }
-	
-.no-margin {
-	margin: 0 !important; }
+.no-margin { margin: 0 !important; }
 	
 hr.dashed {
 	border-style: none;
@@ -105,7 +95,7 @@ hr.grayed {
 	width: 50%;
 	height: 4px;
 	margin: 0 2% 0 -55%;
-	border-top: 1px solid lightgray;
+	border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .labeled-divider:after {
@@ -137,7 +127,7 @@ hr.grayed {
 #center-container {
 	width: 100%;
 	box-shadow: 0 -36px 24px rgba(0, 0, 0, 0.3);
-	height: 100%;
+	/* height: 100%; */
 }
 
 #center-container-inner {
@@ -152,7 +142,7 @@ hr.grayed {
 	}
 	
 	#left-container {
-		/*-webkit-order: 1;*/
+		-webkit-order: 1;
 		order: 1;
 		width: 100%;
 		text-align: center;
@@ -176,9 +166,9 @@ hr.grayed {
 	background: #ECEFF1;
 }
 
-.center-top-inner {
-	padding-top: 3em;
-}
+.center-top-inner { padding-top: 3em; }
+
+.top-nav .pure-menu-link:hover { background-color: rgba(255, 255, 255, 0.2); }
 
 #user-meta {
 	float: right;
@@ -227,15 +217,10 @@ hr.grayed {
 	margin: 1em;
 }
 
-#user-meta.has-not-logged-in {
-	padding: 2em;
-}
+#user-meta.has-not-logged-in { padding: 2em; }
 
-.has-logged-in .not-logged-in {
-	display: none; }
-
-.has-not-logged-in .logged-in {
-	display: none; }
+.has-logged-in .not-logged-in { display: none; }
+.has-not-logged-in .logged-in { display: none; }
 	
 .login-failed-msg {
 	color: lightcoral;
@@ -328,15 +313,6 @@ hr.grayed {
 	color: lightgray;
 }
 
-.article-paragraph-comment-wrapper {
-	border-radius: 2px;
-}
-
-.article-paragraphs {
-	overflow: scroll;
-	scroll-behavior: smooth;
-}
-
 .article-paragraphs-fade {
 	overflow: hidden;
 	position: relative; }
@@ -367,8 +343,14 @@ hr.grayed {
 	cursor: pointer;
 }
 
-.article-parawrap:hover .para-comment-btn {
-	opacity: 1.0; }
+.article-parawrap:hover .para-comment-btn { opacity: 1.0; }
+	
+.article-parawrap:after {
+	content: '';
+	display: block;
+	clear: both; }
+	
+/*.article-paragraph { clear: both; }*/
 
 .para-comment-num {
 	font-size: xx-small;
@@ -386,6 +368,9 @@ hr.grayed {
 	transform: translate3d(0, 25%, 0);
 	background-color: transparent;
 	opacity: 0;
+	border-radius: 2px;
+	display: -webkit-flex;
+	display: flex;
 }
 	
 .article-paragraph-comment-wrapper.paragraph-comment-show {
@@ -398,6 +383,18 @@ hr.grayed {
 	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 	opacity: 1;
+}
+
+.article-paragraph-comment-container {
+	-webkit-flex-grow: 1;
+	flex-grow: 1;
+}
+
+@media screen and (min-height: 319px) {
+.article-paragraphs {
+	overflow: scroll;
+	scroll-behavior: smooth;
+}
 }
 
 @media screen and (min-height: 319px) {
@@ -442,7 +439,9 @@ hr.grayed {
 
 @media screen and (min-height: 1091px) {
 	.article-paragraphs {
-		max-height: none; }
+		max-height: none;
+		overflow: visible
+	}
 }
 
 .comment-form textarea {
@@ -569,6 +568,14 @@ hr.grayed {
 	justify-content: center;
 	align-items: center;
 }
+
+.checkbox-switch-md {
+	font-size: small;
+	color: lightgray;
+	padding: 0.15em;
+}
+/* Fix display error in Safari */
+.checkbox-switch-md label { display: inline-block; }
 
 .btn-m:hover {
 	opacity: 1.0; }
