@@ -10,6 +10,11 @@ var exusdb = require('../exusdb');
 var allowed_setting_field = [ 'title', 'displayname' ];
 var privilege_user_update = [ 'admin' ];
 
+var privilieges = {
+	all_user_update: [ 'admin' ],
+	post_article: [ 'admin', 'foundation' ]	
+};
+
 var redirect_def = function (redirect_url) {
 	var redirect_to = redirect_url;
 	if (!redirect_to) { redirect_to = '/blog'; }
@@ -19,8 +24,18 @@ var redirect_def = function (redirect_url) {
 var authed = function (req, res, next) {
 	if (req.user) {
 		return next(); }
-	var redir = req.query.redirecturl || req.body.redirecturl || req.path;
+	var redir = req.query.redirecturl || req.body.redirecturl || req.originalUrl;
 	res.redirect('/user/login?redirecturl=' + redir);
+};
+
+var req_priviliege = function (privilege) {
+	return function (req, res, next) {
+		var redir = req.query.redirecturl || req.body.redirecturl || req.path;
+		if (!req.user) {
+			return res.redirect('/user/login?redirecturl=' + redir); }
+		if (_(privilieges[privilege]).contains(req.user.privilege)) { return next(); }
+		return res.status(403).send('403: Forbidden');
+	};
 };
 
 router.get('/register', function (req, res, next) {
@@ -114,5 +129,6 @@ router.post('/:id/settings', function (req, res, next) {
 
 module.exports = {
 	router: router,
-	authed: authed
+	authed: authed,
+	req_previlege: req_priviliege
 };

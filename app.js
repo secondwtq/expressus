@@ -46,7 +46,10 @@ var hbs = exphbs.create({
 		article_datefmt: function (d) {
 			return moment(d).format('L'); },
 		comment_datefmt: function (d) {
-			return moment(d).format('L'); }
+			return moment(d).format('L'); },
+		strcat: function () {
+			return String.prototype.concat.apply('', 
+				Array.prototype.slice.call(arguments, 0, -1)); }
 	}
 });
 

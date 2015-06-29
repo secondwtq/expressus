@@ -4,7 +4,7 @@
 		<div class="left-top">
 			<div class="pure-menu pure-menu-horizontal">
 				<ul class="pure-menu-list">
-					<li class="pure-menu-item"><a href="#" class="pure-menu-link">too-young.me</a></li>
+					<li class="pure-menu-item"><a href="/" class="pure-menu-link">too-young.me</a></li>
 				</ul>
 			</div>
 		</div>
@@ -21,42 +21,8 @@
 	
 	<div id="center-container">
 		
-		<div class="center-top">
-			<div id="user-meta" class="{{logged_in_class}}">
-				<!-- if logged in -->
-				<div class="pure-menu pure-menu-horizontal logged-in">
-				    <ul class="pure-menu-list">
-				        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-				            <a href="/user/{{user.id}}" class="pure-menu-link user-meta-initial">
-								<span>{{user.username}}</span>
-								<img id="user-avatar" src="{{user.avatar}}"></img>
-							</a>
-				            <ul class="pure-menu-children">
-				                <li class="pure-menu-item">
-									<form action="/user/logout" method="post" id="form-logout">
-										<input name="redirecturl" type="text" class="ex-hidden" value="/blog">
-										<a class="pure-menu-link" href="#" onclick="document.getElementById('form-logout').submit();">Logout</a>
-									</form>
-								</li>
-				            </ul>
-				        </li>
-				    </ul>
-				</div>
-				<!-- else -->
-				<div class="not-logged-in">
-					<a href="/user/login?redirecturl=/blog" class="top-anchor">Login</a>
-				</div>
-			</div>
-			<div class="center-top-inner">
-				<nav class="pure-menu pure-menu-horizontal">
-					<ul id="nav-top" class="pure-menu-list">
-						<li class="pure-menu-item"><a href="/" class="pure-menu-link">Index</a></li>
-						<li class="pure-menu-item"><a href="/blog" class="pure-menu-link">Blog</a></li>
-						<li class="pure-menu-item"><a href="/about" class="pure-menu-link">About</a></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
+		{{> navbar this_url="/blog"}}
+		
 		<div id="center-container-inner">
 			{{#articles}}
 				<div id="articles">
@@ -93,5 +59,3 @@
 	</div>
 	
 </div>
-
-<script src="static/expressus.js"></script>

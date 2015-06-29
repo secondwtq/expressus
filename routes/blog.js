@@ -17,14 +17,14 @@ router.use(function (req, res, next) {
 		if (req.user === undefined) { return 'has-not-logged-in'; }
 		else { return 'has-logged-in'; }
 	};
-	
+
 	var args = {
 		logged_in: !(req.user === undefined),
 		logged_in_class: logged_in_class
 	};
 	if (args.logged_in) {
 		args.user = req.user; }
-	
+
 	_.extend(res.locals, args);
 	next();
 });
@@ -36,6 +36,15 @@ router.get('/', function (req, res, next) {
 		}, function (reason) {
 			res.status(500).send('Internal Error!');
 		});
+});
+
+router.get('/article/post', user.authed, user.req_previlege('post_article'),
+	function (req, res, next) {
+		res.render('blog_post', { });
+	});
+
+router.post('/article/post', function (req, res, next) {
+	res.status(500).send('');
 });
 
 router.get('/article/:id', function (req, res, next) {
@@ -64,34 +73,30 @@ router.get('/article/:id', function (req, res, next) {
 });
 
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
-	if (req.user) {
-		var parid = parseInt(req.params.paragraph_id);
-		if (req.body.use_markdown) {
-			req.body.content = marked(req.body.content);
-		} else {
-			
-		}
-		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'paragraph', parid ];
-		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type, paragraph_id) values ($1, $2, $3, $4, $5, $6)",
-			params).then(function () {
-				res.redirect('/blog/article/' + req.params.article_id + '#paragraph-' + parid);
-			}, function (reason) { res.status(500).send(reason); });
-	} else { res.status(403).send('403: Forbidden'); }
+	var parid = parseInt(req.params.paragraph_id);
+	if (req.body.use_markdown) {
+		req.body.content = marked(req.body.content);
+	} else {
+		
+	}
+	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'paragraph', parid ];
+	exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type, paragraph_id) values ($1, $2, $3, $4, $5, $6)",
+		params).then(function () {
+			res.redirect('/blog/article/' + req.params.article_id + '#paragraph-' + parid);
+		}, function (reason) { res.status(500).send(reason); });
 });
 
 router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
-	if (req.user) {
-		if (req.body.use_markdown) {
-			req.body.content = marked(req.body.content);
-		} else {
-			
-		}
-		var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'article' ];
-		exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type) values ($1, $2, $3, $4, $5)",
-			params).then(function () {
-				res.redirect('/blog/article/' + req.params.article_id + '#comments');
-			}, function (reason) { res.status(500).send(reason); });
-	} else { res.status(403).send('403: Forbidden'); }
+	if (req.body.use_markdown) {
+		req.body.content = marked(req.body.content);
+	} else {
+		
+	}
+	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'article' ];
+	exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type) values ($1, $2, $3, $4, $5)",
+		params).then(function () {
+			res.redirect('/blog/article/' + req.params.article_id + '#comments');
+		}, function (reason) { res.status(500).send(reason); });
 });
 
 module.exports = router;

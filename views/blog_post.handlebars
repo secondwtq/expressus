@@ -1,0 +1,41 @@
+<div id="container">
+	
+	<div id="left-container">
+		<div class="left-top">
+			<div class="pure-menu pure-menu-horizontal top-nav">
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="/" class="pure-menu-link top-anchor">too-young.me</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="left-center">
+			<div id="author-intro">
+				<a href="/user/{{user.id}}"><img id="author-avatar" src="{{user.avatar}}"></img></a>
+				<div id="author-summary">
+					<a href="/user/{{user.id}}" id="author-name">{{user.username}}</a>
+					<div class="author-text">{{user.title}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="center-container">
+		{{> navbar this_url="/blog/article/post"}}
+		
+		<div id="center-container-inner">
+			<form class="pure-form pure-form-stacked" method="POST" target="/blog/article/post">
+				<fieldset class="pure-group">
+					<input type="text" placeholder="Title" class="pure-u-4-5">
+					<input type="text" placeholder="Subtitle" class="pure-u-4-5">
+				</fieldset>
+				<hr class="dashed" />
+				<textarea></textarea>
+				<hr class="dashed" />
+				<button class="pure-button">Preview</button>
+				<button type="submit" class="pure-button">Post</button>
+				<br/>
+			</form>
+		</div>
+	</div>
+	
+</div>
