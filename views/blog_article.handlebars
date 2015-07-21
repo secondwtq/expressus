@@ -64,7 +64,7 @@
 											<div class="labeled-divider">POST A COMMENT</div>
 											<textarea name="content"></textarea>
 											<div class="comment-form-frame">
-												<button class="pure-button">BACK</button>
+												<button class="pure-button para-comment-back">BACK</button>
 												<span class="checkbox-switch checkbox-switch-md">
 													<input type="checkbox" name="use_markdown" id="checkbox-markdown-{{id}}" class="js-focus-textarea">
 													<label for="checkbox-markdown-{{id}}">Use Markdown</label>
@@ -144,6 +144,15 @@
 		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
 	$('.para-comment-btn').on('click', function (e) {
 		switch_comment($(this).parent().children('.article-paragraph-comment-wrapper')); });
+		
+	$('.para-comment-back').on('click', function (e) {
+		e.preventDefault();
+		switch_comment($(this).parents('.article-paragraph-comment-wrapper'));
+		var nextSlidePos = $(this).parents('.article-parawrap').position();
+		$(this).parents('.article-paragraphs').scrollTop(
+			$(this).parents('.article-parawrap').position().top + 
+			$(this).parents('.article-paragraphs').scrollTop());
+	});
 
 	// prevent whole-page scrolling
 	// 	when scrolling article to top/bottom
@@ -156,18 +165,24 @@
 	
 	// hash-tag scroll to element with smooth
 	// www.abeautifulsite.net/smoothly-scroll-to-an-element-without-a-jquery-plugin-2
+	
+	var smooth_scroll = function (target) {
+		if (target.length) {
+			$('html, body').animate({ scrollTop: target.offset().top }, 400); }
+	};
+	
 	$('a[href^="#"]').on('click', function (e) {
 		var target = $($(this).attr('href'));
-		if (target.length) {
-			e.preventDefault();
-			$('html, body').animate({ scrollTop: target.offset().top }, 400);
-		}
+		e.preventDefault();
+		smooth_scroll(target);
 	});
 	
 	// auto-scroll to article on-load
 	$(function () {
-		if (!window.location.hash)
-			$('#to-perfect-view').click(); });
+		if (!window.location.hash) {
+			smooth_scroll($('#jump-to-me'));
+		}
+	});
 	
 	$('#back-to-list').on('click', function (e) {
 		$('.load-fade-in').addClass('load-fade-out'); });
