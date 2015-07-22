@@ -152,6 +152,10 @@ hr.grayed {
 	
 	#left-container .pure-menu-horizontal {
 		text-align: center; }
+		
+	#center-container {
+		margin-bottom: 1.5em;
+	}
 }
 
 .left-top {
@@ -404,6 +408,12 @@ hr.grayed {
 		max-height: 320px; }
 }
 
+/* Apple iPhone 5/5c/5s Safari */
+@media screen and (min-height: 460px) {
+	.article-paragraphs {
+		max-height: 392px; }
+}
+
 @media screen and (min-height: 479px) {
 	.article-paragraphs {
 		max-height: 432px; }
@@ -431,7 +441,7 @@ hr.grayed {
 
 @media screen and (min-height: 1049px) {
 	.article-paragraphs {
-		max-height: 900px; }
+		max-height: 1000px; }
 }
 
 @media screen and (min-height: 1079px) {

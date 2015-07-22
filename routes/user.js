@@ -124,7 +124,14 @@ router.get('/:id/settings', authed, function (req, res, next) {
 
 router.post('/:id/settings', function (req, res, next) {
 	var user_id = parseInt(req.params.id);
-	
+	exusdb.db().none('update stakeholder set displayname=$2, title=$3 where id=$1', 
+		[ user_id, req.body.displayname, req.body.title ]).then(function (data) {
+			res.redirect('/user/' + user_id + '/settings');
+		}, function (reason) {
+			if (exusdb.error.not_found(reason)) {
+				res.status(404).send('404: Page not found'); }
+			else { res.send(toString(reason), 500); }
+		});
 });
 
 module.exports = {
