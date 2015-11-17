@@ -1,4 +1,32 @@
 
-.confirm-delete-container {
-	-webkit-user-select: none;
+html.subpage-html { height: 100%; }
+
+body.subpage-body {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-content: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: space-around;
+	-webkit-flex-direction: column;
+	align-content: center;
+	align-items: center;
+	justify-content: space-around;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+
+	.subpage-container { position: relative; }
+	.subpage-title { font-weight: normal; }	
+}
+
+.login-input {
+	min-width: 18em;
+	color: gray;
+}
+
+.login-failed-msg {
+	color: lightcoral;
+	font-size: smaller;
+	text-shadow: 1px 0px darkslategray;
 }
