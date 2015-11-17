@@ -1,17 +1,23 @@
 
 body {
-	/*font-family: 'Lucida Grande', ''Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;*/
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 
 		'Lucida Grande', 'Lucida Sans Unicode', 
 		Geneva, Verdana, sans-serif;
 	
 	background: linear-gradient(to top, #82878f 0%,#73787e 100%);
-	background-image: linear-gradient(rgb(130, 135, 143) 0%, rgb(115, 120, 126) 100%);
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,#82878f), color-stop(100%,#73787e));
-	background-color: #82878f;
+	background-image: linear-gradient(#82878f 0%, #73787e 100%);
+	/* #73787e: rgb(115, 120, 126) */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#82878f), color-stop(100%,#73787e));
+	background-color: #70757b;
 	background-repeat: no-repeat;
 	
 	color: ghostwhite;
+	
+	/*font-family: 'Lucida Grande', ''Lucida Sans', 
+				'Lucida Sans Regular', 'Lucida Grande', 
+				'Lucida Sans Unicode', Geneva, Verdana, 
+				sans-serif;*/
+	/*background-color: #82878f;*/
 }
 
 a {
@@ -320,7 +326,8 @@ hr.grayed {
     left: 0;
 	pointer-events: none;
 	background: linear-gradient(to bottom, transparent, rgb(115, 120, 126) 2em);
-	background-image: radial-gradient(ellipse farthest-corner, rgba(115, 120, 126, 255) 20%, rgba(115, 120, 126, 0) 100%);
+	background-image: radial-gradient(ellipse farthest-corner, rgba(125, 129, 136, 255) 20%, rgba(125, 129, 136, 0) 100%);
+	/*background-image: radial-gradient(ellipse farthest-corner, rgba(115, 120, 126, 255) 20%, rgba(115, 120, 126, 0) 100%);*/
 	top: -2.5em;
 }
 

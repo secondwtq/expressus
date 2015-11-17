@@ -8,9 +8,6 @@
 		{{else}}
 			{{user.username}}
 		{{/if}}
-		{{#if display_settings}}
-			<a href="/user/{{user.id}}/settings"><i class="fa fa-pencil ex-smaller"></i></a>
-		{{/if}}
 	</h3>
 	<div class="ex-small">The Hidden Foundation</div>
 	<hr class="dashed" />
@@ -18,4 +15,7 @@
 	<hr class="dashed" />
 	<div class="ex-small">Registered: {{datefmt 'L' user.register_time}}</div>
 	<hr class="dashed" />
+	{{#if display_settings}}
+		<a href="/user/{{user.id}}/settings"><i class="fa fa-pencil ex-smaller"></i></a>
+	{{/if}}
 </div>

@@ -32,7 +32,7 @@ var authed = function (req, res, next) {
 	res.redirect('/user/login?redirecturl=' + redir);
 };
 
-var req_priviliege = function (privilege) {
+var req_privilege = function (privilege) {
 	return function (req, res, next) {
 		var redir = req.query.redirecturl || req.body.redirecturl || req.path;
 		if (!req.user) {
@@ -142,5 +142,5 @@ router.post('/:id/settings', function (req, res, next) {
 module.exports = {
 	router,
 	authed,
-	req_previlege
+	req_privilege
 };

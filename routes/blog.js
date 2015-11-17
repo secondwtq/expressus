@@ -71,15 +71,17 @@ function markAndSplit(source) {
 }
 
 router.get('/', (req, res, next) =>
-	exusdb.db().any('SELECT * FROM "article_detail" WHERE NOT trashed AND NOT indraft ORDER BY post_date DESC')
+	exusdb.db().any('SELECT * FROM "article_detail" \
+					WHERE NOT trashed AND NOT indraft \
+					ORDER BY post_date DESC')
 		.then((data) => res.render('blog_index', { articles: data }),
 			(reason) => next(_.status(reason, 500)))
 );
 
-router.get('/article/post', user.authed, user.req_previlege('post_article'),
+router.get('/article/post', user.authed, user.req_privilege('post_article'),
 	(req, res, next) => res.render('blog_post', { }));
 	
-router.get('/article/draft', user.authed, user.req_previlege('post_article'),
+router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 	function (req, res, next) {
 		Promise.all([
 			exusdb.db().oneOrNone('SELECT * FROM "stakeholder" WHERE id = $1', [ req.user.id ]),
@@ -147,7 +149,7 @@ router.post('/article/:id/post', user.authed, function (req, res, next) {
 	
 });
 
-router.post('/article/draft', user.authed, user.req_previlege('post_article'),
+router.post('/article/draft', user.authed, user.req_privilege('post_article'),
 	function (req, res, next) {
 		exusdb.db().tx((t) =>
 			t.oneOrNone('INSERT INTO "article" (author_id, post_date, title, subtitle,\
@@ -162,7 +164,7 @@ router.post('/article/draft', user.authed, user.req_previlege('post_article'),
 	});
 
 // post article - direct
-router.post('/article/post', user.authed, user.req_previlege('post_article'), function (req, res, next) {
+router.post('/article/post', user.authed, user.req_privilege('post_article'), function (req, res, next) {
 	var id;
 	exusdb.db().tx((t) =>
 		t.one('INSERT INTO "article" (author_id, post_date, title, subtitle, summary) \
@@ -179,7 +181,7 @@ router.post('/article/post', user.authed, user.req_previlege('post_article'), fu
 
 router.get('/article/:id', function (req, res, next) {
 	var args = { };
-	args.has_comment = function () { return !(args.comments === undefined); }
+	args.has_comment = () => !(args.comments === undefined);
 	exusdb.db().oneOrNone("SELECT * FROM article_detail WHERE id=$1 AND NOT trashed", [ parseInt(req.params.id) ])
 		.then(function (data) {
 			if (data === null) { throw _.throw(404, 'article not found or removed'); }
@@ -190,10 +192,11 @@ router.get('/article/:id', function (req, res, next) {
 			args.paragraphs = data;
 			return exusdb.db().manyOrNone('SELECT * FROM "comment_detail" WHERE article_id=$1 ORDER BY comment_date DESC', [ args.id ]);
 		}).then(function (data) {
-			args.comments = _.filter(data, function (post) { return post.comment_type == 'article'; });
-			var comments_paras = _(data).filter(function (post) { return post.comment_type == 'paragraph'; });
+			args.comments = _.filter(data, (post) => (post.comment_type == 'article'));
+			var comments_paras = _.filter(data, (post) => (post.comment_type == 'paragraph'));
 			for (var p in args.paragraphs) {
-				args.paragraphs[p].comments = _(comments_paras).filter(function (comment) { return comment.paragraph_id === args.paragraphs[p].id; });
+				args.paragraphs[p].comments = _.filter(comments_paras, 
+					(comment) => (comment.paragraph_id === args.paragraphs[p].id));
 				args.paragraphs[p].comment_count = _(args.paragraphs[p].comments).size();
 			}
 			res.render('blog_article', args);

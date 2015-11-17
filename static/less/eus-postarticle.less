@@ -1,61 +1,31 @@
 
 @lint-20: rgba(255, 255, 255, 0.2);
-
-#author-summary {
-	
-	#author-displayname { color: #eee; }
-	
-	#author-name {
-		color: fade(lightgray, 50%);
-		display: block;
-		font-size: 0.8em;
-		padding-bottom: 0.4em;
-	}
-	
-	#author-text { font-size: smaller; }
-}
-
-.article-index {
-	.article-meta {
-		padding: 0.5em;
-		font-size: 0.8em;
-		color: lightgray;
-		
-		.article-meta-left { }
-		.article-meta-right { float: right; }
-		
-		&:after{
-			display: block;
-			content: '';
-			clear: both;
-		}
-	}
-}
+@darken-20: rgba(0, 0, 0, 0.2);
 
 #form-post {
 	
 	font-size: 0.8em;
 	
-	textarea {
+	input, textarea {
 		width: 100%;
 		background-color: @lint-20;
-		border-radius: 2px;
-		box-shadow: none;
 		border: none;
-		
+		box-shadow: none;
+		margin: 0;
+	}
+	
+	#titleset {
+		:first-child { box-shadow: 0 -1px 3px @darken-20; }
+		:last-child { box-shadow: 0 1px 3px @darken-20; }
+	}
+	
+	textarea {
+		box-shadow: 0 0 6px @darken-20;
 		&#postsummary { min-height: 8em; }
 		&#postarea { min-height: 28em; }
 	}
 	
 	#titleset {
-		input {
-			background-color: @lint-20;
-			box-shadow: none;
-			border: none;
-			width: 100%;
-			margin: 0;
-		}
-		
 		* {
 			top: 0 !important;
 			bottom: 0 !important;
