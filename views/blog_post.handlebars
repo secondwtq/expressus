@@ -23,19 +23,49 @@
 		{{> navbar this_url="/blog/article/post"}}
 		
 		<div id="center-container-inner">
-			<form class="pure-form pure-form-stacked" method="POST" target="/blog/article/post">
-				<fieldset class="pure-group">
-					<input type="text" placeholder="Title" class="pure-u-4-5">
-					<input type="text" placeholder="Subtitle" class="pure-u-4-5">
+			
+			<h3 class="center-aligned">
+				{{#if indraft}}
+				Edit a Draft
+				{{else}}
+				Post an Article
+				{{/if}}
+			</h3>
+			<hr class="dashed" />
+			
+			<form id="form-post" class="pure-form pure-form-stacked" method="POST" action="/blog/article/post">
+				<fieldset class="pure-group" id="titleset">
+					<input type="text" name="title" placeholder="Title" class="pure-u-4-5" value="{{title}}">
+					<input type="text" name="subtitle" placeholder="Subtitle" class="pure-u-4-5" value="{{subtitle}}">
+					<textarea id="postsummary" name="summary" placeholder="Summary">{{summary}}</textarea>
 				</fieldset>
 				<hr class="dashed" />
-				<textarea></textarea>
+				<textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
 				<hr class="dashed" />
 				<button class="pure-button">Preview</button>
-				<button type="submit" class="pure-button">Post</button>
+				{{#if indraft}}
+				<button class="pure-button" id="save-to-draft" formaction="/blog/article/{{id}}/draft">Save to Draft</button>
+				<button type="submit" class="pure-button" formaction="/blog/article/{{id}}/post">Post</button>
+				{{else}}
+				<button class="pure-button" id="save-to-draft" formaction="/blog/article/draft">Save to Draft</button>
+				<button type="submit" class="pure-button" formaction="/blog/article/post">Post</button>
+				{{/if}}
 				<br/>
 			</form>
 		</div>
 	</div>
 	
 </div>
+
+<script>
+	function postFormCustomized(formname, action) {
+		var form = document.getElementById(formname);
+		var oldaction = form.action;
+		form.action = action;
+		form.submit();
+		form.action = oldaction;
+	}
+	$('#save-to-draft').on('click', function () {
+		
+	});
+</script>

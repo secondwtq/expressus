@@ -1,0 +1,16 @@
+<div class="subpage-container confirm-delete-container">
+	<h3 class="subpage-title">Delete Article</h3>
+	{{#failed}}<div class="login-failed-msg">{{failed_message}}</div>{{/failed}}
+	<form class="pure-form" action="/blog/article/{{id}}/delete" method="POST">
+		<hr class="dashed" />
+		<input type="checkbox" id="confirmed" name="confirmed"><label for="confirmed"> Yes, I do.</label>
+		<hr class="dashed" />
+		<button type="submit" class="pure-button pure-button-primary" disabled>Confirm</button>
+		<a href="/blog/article/{{id}}">Back</a>
+	</form>
+</div>
+<script>
+	document.getElementById('confirmed').addEventListener('change', function () {
+		document.getElementsByTagName('button')[0].disabled = 
+			!document.getElementById('confirmed').checked; });
+</script>

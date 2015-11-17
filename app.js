@@ -5,15 +5,14 @@
 var path = require('path');
 var config = require('./exusconfig');
 
-var exus_env = {
-	
-};
+var exus_env = { };
 
 var express = require('express');
 var app = express();
 
 var exphbs = require('express-handlebars');
 var moment = require('moment');
+var _ = require('lodash');
 // moment().utcOffset(8);
 
 var logger = require('morgan');
@@ -49,7 +48,12 @@ var hbs = exphbs.create({
 			return moment(d).format('L'); },
 		strcat: function () {
 			return String.prototype.concat.apply('', 
-				Array.prototype.slice.call(arguments, 0, -1)); }
+				Array.prototype.slice.call(arguments, 0, -1)); },
+		ifeq: function (lhs, rhs, opts) {
+			if (lhs == rhs) {
+				return opts.fn(this);
+			} else { return opts.inverse(this); }
+		}
 	}
 });
 
@@ -60,10 +64,10 @@ app.use(cookie_parser());
 app.use(body_parser.urlencoded({ extended: true }));
 app.use(method_override());
 
-app.use(function (err, req, res, next) {
-	console.error(err.stack);
-	res.status(500).send('Something broke!');
-});
+// app.use(function (err, req, res, next) {
+// 	console.error(err.stack);
+// 	res.status(500).send('Something broke!');
+// });
 
 var exusdb = require('./exusdb');
 
@@ -79,19 +83,18 @@ app.use(session({
 
 exusdb.connect();
 
+var bcrypt = require('bcrypt');
 passport.use(new LocalStrategy(
 	{ usernameField: 'username', passwordField: 'passwd' },
 	function (username, passwd, done) {
 		exusdb.db().one(
-			"select * from stakeholder where username=$1 and passwd=$2", [ username, passwd ]).
-		then(function (data) {
-			return done(null, data);
-		}, function (reason) {
-			if (reason.trim() === 'No data returned from the query.') {
-				return done(null, false, { message: 'Username and password doesnot match.' });
-			} else {
-				return done(null, false, { message: reason }); }
-		});
+			"SELECT * FROM stakeholder WHERE username=$1", [ username ]).
+		then((data) => bcrypt.compare(passwd, data['passwd'], (err, result) => 
+			(err || (!result)) ? done(err, false, { message: 'Username and password doesn\'t match.' }) : done(null, data))
+		, (reason) => (reason.trim() === 'No data returned from the query.') ?
+				done(null, false, { message: 'Username and password doesnot match.' })
+				: done(null, false, { message: reason })
+		);
 	}));
 
 passport.serializeUser(function (user, done) {
@@ -104,11 +107,14 @@ passport.deserializeUser(function (user, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-var route_blog = require('./routes/blog');
-var user = require('./routes/user');
-app.use('/blog', route_blog);
-app.use('/user', user.router);
+app.use('/blog', require('./routes/blog'));
+app.use('/user', require('./routes/user').router);
 app.use('/static', express.static('static'));
+
+var errorHandler = require('./error_handler');
+app.use(errorHandler.pageNotFound);
+app.use(errorHandler.log);
+app.use(errorHandler.page);
 
 var server = app.listen(process.env.PORT || 8000, function () {
 	var host = server.address().address;

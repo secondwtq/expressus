@@ -1,6 +1,9 @@
 
 body {
-	font-family: 'Lucida Grande';
+	/*font-family: 'Lucida Grande', ''Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;*/
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 
+		'Lucida Grande', 'Lucida Sans Unicode', 
+		Geneva, Verdana, sans-serif;
 	
 	background: linear-gradient(to top, #82878f 0%,#73787e 100%);
 	background-image: linear-gradient(rgb(130, 135, 143) 0%, rgb(115, 120, 126) 100%);
@@ -255,15 +258,6 @@ hr.grayed {
 	box-shadow: 0 3px 6px dimgray;
 }
 
-#author-summary #author-name {
-	display: block;
-	padding: 0.5em;
-}
-
-#author-summary .author-text {
-	font-size: x-small;
-}
-
 #center-container #articles {
 	margin-right: 1.5em;
 }
@@ -295,13 +289,6 @@ hr.grayed {
 	color: #ccc;
 	font-weight: normal;
 	font-size: 0.7em;
-}
-
-.article-index .article-meta {
-	text-align: right;
-	padding: 0.5em;
-	font-size: 0.8em;
-	color: lightgray;
 }
 
 .article-index .article-summary,
@@ -544,12 +531,18 @@ hr.grayed {
 
 @media screen and (max-width: 767px) {
 	
+	.article-comment {
+		padding-left: 0; }
+	
 	.article-comment .article-date {
 		-webkit-flex-shrink: initial;
 		-webkit-flex-basis: 128px;
 		flex-shrink: initial;
 		flex-basis: 128px;
 	}
+	
+	.article-comment-usercard {
+		padding-right: 0; }
 	
 	.article-comments {
 		padding: 0.7em; }

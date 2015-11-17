@@ -1,0 +1,49 @@
+<div id="container">
+	
+	<div id="left-container">
+		<div class="left-top">
+			<div class="pure-menu pure-menu-horizontal top-nav">
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="/" class="pure-menu-link top-anchor">too-young.me</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="left-center">
+			<div id="author-intro">
+				<a href="/user/{{author_id}}"><img id="author-avatar" src="{{avatar}}"></img></a>
+				<div id="author-summary">
+					<div id="author-displayname">{{user_displayname}}</div>
+					<a href="/user/{{author_id}}" id="author-name">@{{username}}</a>
+					<div id="author-text">{{user_title}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="center-container">
+		
+		{{> navbar this_url="/blog"}}
+		
+		<div id="center-container-inner">
+			{{#articles}}
+				<div id="articles">
+					<div class="article-index">
+						<div class="article-head">
+							<h3><a href="/blog/article/{{id}}/draft">{{title}}</a><span class="article-date">{{article_datefmt post_date}}</h3></h3>
+						</div>
+						<div class="article-summary">
+							{{summary}}
+						</div>
+						<div class="article-meta">
+						</div>
+					</div>
+				</div>
+			{{/articles}}
+			{{^articles}}
+				<div class="no-article">No article yet :D</div>
+			{{/articles}}
+		</div>
+		
+	</div>
+	
+</div>

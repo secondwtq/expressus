@@ -12,8 +12,9 @@
 			<div id="author-intro">
 				<a href="/user/{{author_id}}"><img id="author-avatar" src="{{avatar}}"></img></a>
 				<div id="author-summary">
-					<a href="/user/{{author_id}}" id="author-name">{{username}}</a>
-					<div class="author-text">{{user_title}}</div>
+					<div id="author-displayname">{{user_displayname}}</div>
+					<a href="/user/{{author_id}}" id="author-name">@{{username}}</a>
+					<div id="author-text">{{user_title}}</div>
 				</div>
 			</div>
 		</div>
@@ -41,7 +42,7 @@
 									<i class="fa fa-comments"></i>
 								</div>
 								<div class="article-paragraph">
-									{{content}}
+									{{{content}}}
 								</div>
 								<div class="article-paragraph-comment-wrapper">
 									<div class="article-paragraph-comment-container">
@@ -80,16 +81,25 @@
 					</div>
 				</div>
 				<div class="article-meta load-fade-in load-delay-3">
-					{{#if read_count}}
-						<span class="small-vert-dived">{{read_count}} read </span>
-					{{else}}
-						<span class="small-vert-dived">no read </span>
-					{{/if}}
-					<span class="small-vert-dived">{{^comment_count}}no{{/comment_count}}{{#if comment_count}}{{comment_count}}{{/if}} {{plural_auto 'comment' comment_count}} </span>
-					by <a href="/user/{{author_id}}">{{username}}</a>
+					<span class="article-meta-left">
+						{{#ifeq author_id user.id}}
+							<span class="small-vert-dived"><a href="/blog/article/{{id}}/delete">delete</a></span>
+						{{/ifeq}}
+					</span>
+					<div class="article-meta-right">
+						{{#if read_count}}
+							<span class="small-vert-dived">{{read_count}} read </span>
+						{{else}}
+							<span class="small-vert-dived">no read </span>
+						{{/if}}
+						<span class="small-vert-dived">{{^comment_count}}no{{/comment_count}}{{#if comment_count}}{{comment_count}}{{/if}} {{plural_auto 'comment' comment_count}} </span>
+						by <a href="/user/{{author_id}}">{{username}}</a>
+					</div>
 				</div>
 				<hr class="grayed load-fade-in load-delay-3" />
 			</div>
+			
+			<!-- COMMENTS -->
 			{{^comments}}
 				<div class="no-article load-fade-in load-delay-4">No Comments yet :D</div>
 			{{/comments}}
@@ -107,6 +117,8 @@
 					{{/comments}}
 				</div>
 			{{/has_comment}}
+			
+			<!-- POST COMMENT -->
 			<form class="pure-form comment-form article-comment-form load-fade-in load-delay-4" action="/blog/article/{{id}}/comment" method="post">
 				<div class="labeled-divider">POST A COMMENT</div>
 				<textarea name="content"></textarea>
@@ -157,12 +169,13 @@
 	// prevent whole-page scrolling
 	// 	when scrolling article to top/bottom
 	// stackoverflow.com/questions/25125560/prevent-parent-scroll-when-in-child-div
+/*
 	$('.article-paragraphs').on('mousewheel', function (e) {
 	    var event = e.originalEvent, d = event.wheelDelta || -event.detail;
 	    this.scrollTop += (d < 0 ? 1 : -1) * 30;
 	    e.preventDefault();
 	});
-	
+*/	
 	// hash-tag scroll to element with smooth
 	// www.abeautifulsite.net/smoothly-scroll-to-an-element-without-a-jquery-plugin-2
 	

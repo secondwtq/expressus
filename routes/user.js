@@ -1,9 +1,13 @@
 
+'use strict';
+
 var express = require('express');
 var router = express.Router();
 
-var _ = require('underscore');
+var _ = require('lodash');
 var passport = require('passport');
+
+var bcrypt = require('bcrypt');
 
 var exusdb = require('../exusdb');
 
@@ -62,7 +66,6 @@ router.post('/login', function (req, res, next) {
 		
 		req.login(user, function (err) {
 			if (err) { return next(err); }
-			
 			return res.redirect(redirect_def(req.body.redirecturl));
 		});
 	})(req, res, next);
@@ -79,14 +82,16 @@ router.post('/logout', function (req, res, next) {
 
 router.post('/register', function (req, res, next) {
 	if (req.user) {
-		return res.status(403).send('403: Forbidden');
-	} else {
-		exusdb.db().none("insert into stakeholder(username, passwd, email, register_time) values ($1, $2, $3, $4)",
-			[req.body.username, req.body.passwd, req.body.email, new Date()]).
-		then(function () {
-			return res.redirect('/user/login');
-		}, function (reason) { return res.status(500).send(reason); });
-	}
+		return res.status(403).send('403: Forbidden'); }
+	bcrypt.genSalt(10, function (err, salt) {
+		if (err) { return next(err); }
+		bcrypt.hash(req.body.passwd, salt, (err, hashed) => (err) ? next(err) :  
+			exusdb.db().none("INSERT INTO stakeholder(username, passwd, email, register_time) VALUES ($1, $2, $3, $4)",
+				[req.body.username, hashed, req.body.email, new Date()])
+			.then(() => res.redirect('/user/login'),
+				(reason) => res.status(500).send(reason))
+		);
+	});
 });
 
 var can_modify_settings = function (user, target_id) {
@@ -135,7 +140,7 @@ router.post('/:id/settings', function (req, res, next) {
 });
 
 module.exports = {
-	router: router,
-	authed: authed,
-	req_previlege: req_priviliege
+	router,
+	authed,
+	req_previlege
 };
