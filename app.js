@@ -15,6 +15,8 @@ var moment = require('moment');
 var _ = require('lodash');
 // moment().utcOffset(8);
 
+var util = require('util');
+
 var logger = require('morgan');
 var cookie_parser = require('cookie-parser');
 var session = require('express-session');
@@ -73,15 +75,17 @@ var exusdb = require('./exusdb');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var SessionStore = require('./misc/session-store')(session);
+
+exusdb.connect();
 
 app.use(session({
 	secret: "I'm a secret.",
 	rolling: true,
 	resave: true,
-	maxAge: new Date(Date.now() + 3600000)
+	maxAge: new Date(Date.now() + 3600000),
+	'store': new SessionStore()
 }));
-
-exusdb.connect();
 
 var bcrypt = require('bcrypt');
 passport.use(new LocalStrategy(

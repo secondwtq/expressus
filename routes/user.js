@@ -46,11 +46,19 @@ router.get('/register', function (req, res, next) {
 	if (req.user) {
 		return res.redirect('/blog'); }
 	
-	res.render('user_register', { layout: 'subpage' }); });
+	res.render('user_register', {
+		layout: 'subpage',
+		'title_': 'Register'
+	});
+});
 
 router.get('/login', function (req, res, next) {
 	res.render('user_login', {
-		layout: 'subpage', redirecturl: req.query.redirecturl }); });
+		layout: 'subpage',
+		'title_': 'Login',
+		redirecturl: req.query.redirecturl
+	});
+});
 
 router.post('/login', function (req, res, next) {
 	passport.authenticate('local', function (err, user, info) {
@@ -58,6 +66,7 @@ router.post('/login', function (req, res, next) {
 		
 		if (!user) { return res.render('user_login', {
 			layout: 'subpage',
+			'title_': 'Login',
 			failed: true,
 			failed_message: info.message,
 			last_username: req.body.username,
@@ -102,9 +111,11 @@ router.get('/:id', function (req, res, next) {
 	var user_id = parseInt(req.params.id);
 	exusdb.db().one('select * from stakeholder where id=$1', [ user_id ])
 		.then(function (data) {
-			res.render('user_info',
-				{ layout: 'subpage', user: data,
-					display_settings: can_modify_settings(req.user, user_id) });
+			res.render('user_info', {
+				layout: 'subpage', user: data,
+				display_settings: can_modify_settings(req.user, user_id),
+				'title_': `User ${data['username']}`
+			});
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
 				res.status(404).send('404: Page not found'); }
@@ -118,8 +129,11 @@ router.get('/:id/settings', authed, function (req, res, next) {
 		return res.status(403).send('403:Forbidden'); }
 	exusdb.db().one('select * from stakeholder where id=$1', [ user_id ])
 		.then(function (data) {
-			res.render('user_settings',
-				{ layout: 'subpage', user: data });
+			res.render('user_settings', {
+				layout: 'subpage',
+				user: data,
+				'title_': `Settings of ${data['username']}`
+			});
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
 				res.status(404).send('404: Page not found'); }

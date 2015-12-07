@@ -80,13 +80,16 @@ router.get('/article', (req, res, next) =>
 					WHERE NOT trashed AND NOT indraft \
 					ORDER BY post_date DESC')
 	.then((data) =>
-		res.render('blog_index', { articles: data }),
-			(reason) => next(_.status(reason, 500))
+		res.render('blog_index', {
+			'title_': 'Articles',
+			'articles': data
+		}),
+	(reason) => next(_.status(reason, 500))
 	)
 );
 
 router.get('/article/post', user.authed, user.req_privilege('post_article'),
-	(req, res, next) => res.render('blog_post', { }));
+	(req, res, next) => res.render('blog_post', { 'title_': 'Post Article' }));
 	
 router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 	function (req, res, next) {
@@ -97,7 +100,7 @@ router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 		])
 		.then((data) =>
 			res.render('blog_index_draft', _.extend(
-				convertUserDescToIndexUserDesc(data[0]), { 'articles': data[1] })
+				convertUserDescToIndexUserDesc(data[0]), { 'title': 'Drafts', 'articles': data[1] })
 			)
 		)
 		.catch((err) => next(_.statusopt(err)));
@@ -105,17 +108,33 @@ router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 
 router.get('/article/:id/delete', user.authed, function (req, res, next) {
 	var id = parseInt(req.params['id']);
-	res.render('blog_confirm_delete', { 'layout': 'subpage', 'id': id });
+	res.render('blog_confirm_delete', {
+		'layout': 'subpage', 'id': id,
+		'title_': 'Delete Article',
+		'title': 'Delete Article',
+		'message': 'Really Delete?',
+		'action': `/blog/article/${id}/delete`,
+		'redirecturl': req.query['redirecturl'],
+		'backurl': req.query['backurl']
+	});
 });
 
 router.post('/article/:id/delete', user.authed, function (req, res, next) {
 	var id = parseInt(req.params['id']);
 	if (req.body['confirmed'] != 'on') {
-		res.render('blog_confirm_delete', { 'layout': 'subpage', 'id': id });
+		res.render('blog_confirm_delete', {
+			'layout': 'subpage', 'id': id,
+			'title_': 'Delete Article',
+			'title': 'Delete Article',
+			'message': 'Really Delete?',
+			'action': `/blog/article/${id}/delete`,
+			'redirecturl': req.body['redirecturl'],
+			'backurl': req.body['backurl']
+		});
 	} else {
 		exusdb.db().oneOrNone('UPDATE "article" SET trashed = TRUE WHERE id = $1 AND author_id = $2 RETURNING id',
 			[ id, req.user.id ])
-		.then((id) => (id !== null) ? res.redirect('/blog') : 
+		.then((id) => (id !== null) ? res.redirect(req.body['redirecturl']) : 
 			next(_.throw(404, 'no such entry or invalid user')));
 	}
 });
@@ -128,6 +147,7 @@ router.get('/article/:id/draft', user.authed, function (req, res, next) {
 		:
 		res.render('blog_post', {
 			'indraft': true,
+			'title_': 'Edit Draft',
 			'id': data['id'],
 			'title': data['title'],
 			'subtitle': data['subtitle'],
@@ -152,9 +172,26 @@ router.post('/article/:id/draft', user.authed, function (req, res, next) {
 	.catch((err) => next(_.statusopt(err)));
 });
 
-router.post('/article/:id/post', user.authed, function (req, res, next) {
-	
-});
+router.post('/article/:id/postdraft', user.authed, user.req_privilege('post_article'),
+	function (req, res, next) {
+		var id = parseInt(req.params['id']);
+		exusdb.db().tx(function (t) {
+			return t.oneOrNone('SELECT * FROM "article_draft" WHERE id = $1 AND author_id = $2', [ id, req.user['id'] ])
+				.then((article) => (article === null) ? 
+					next(_.throw(404, 'no such entry or invalid user')) :
+					t.batch(_.map(markAndSplit(req.body['content']), (para) => 
+							t.none('INSERT INTO "paragraph"(article_id, content) VALUES ($1, $2)', [ id, para ])
+						)
+					)
+				)
+				.then(() =>
+					t.oneOrNone('UPDATE "article" SET title = $3, subtitle = $4, summary = $5, indraft = FALSE \
+								WHERE id = $1 AND author_id = $2 RETURNING id',
+					[ id, req.user['id'], req.body['title'], req.body['subtitle'], req.body['summary'] ])
+				).catch((err) => console.log(err));
+		}).then((id) => res.redirect(`/blog/article/${id['id']}`))
+		.catch((err) => console.log(err));
+	});
 
 router.post('/article/draft', user.authed, user.req_privilege('post_article'),
 	function (req, res, next) {
@@ -206,11 +243,12 @@ router.get('/article/:id', function (req, res, next) {
 					(comment) => (comment.paragraph_id === args.paragraphs[p].id));
 				args.paragraphs[p].comment_count = _(args.paragraphs[p].comments).size();
 			}
-			res.render('blog_article', args);
+			res.render('blog_article', _.extend(args, { 'title_': args['title'] }));
 		})
 		.catch((err) => next(_.statusopt(err)));
 });
 
+// POST paragraph comment
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
 	var parid = parseInt(req.params.paragraph_id);
 	var content = req.body['use_markdown'] ? 
@@ -222,6 +260,7 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed,
 		(reason) => next(_.statusopt(reason)));
 });
 
+// POST article comment
 router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 

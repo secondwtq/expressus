@@ -1,12 +1,15 @@
 <div class="subpage-container ex-noselect">
-	<h3 class="subpage-title">Delete Article</h3>
+	<h3 class="subpage-title">{{title}}</h3>
 	{{#failed}}<div class="login-failed-msg">{{failed_message}}</div>{{/failed}}
-	<form class="pure-form" action="/blog/article/{{id}}/delete" method="POST">
+	<div>{{message}}</div>
+	<form class="pure-form" action="{{{action}}}" method="POST">
 		<hr class="dashed" />
 		<input type="checkbox" id="confirmed" name="confirmed"><label for="confirmed"> Yes, I do.</label>
+		<input type="text" name="redirecturl" class="ex-hidden" value="{{redirecturl}}">
+		<input type="text" name="backurl" class="ex-hidden" value="{{backurl}}">
 		<hr class="dashed" />
 		<button type="submit" class="pure-button pure-button-primary" disabled>Confirm</button>
-		<a href="/blog/article/{{id}}">Back</a>
+		<a href="{{backurl}}">Back</a>
 	</form>
 </div>
 <script>
