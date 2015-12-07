@@ -8,6 +8,8 @@ var _ = require('lodash');
 var exusdb = require('../exusdb');
 var user = require('./user');
 
+var xss = require('xss-filters');
+
 var marked = require('marked');
 marked.setOptions({
 	gfm: true, tables: true,
@@ -71,11 +73,16 @@ function markAndSplit(source) {
 }
 
 router.get('/', (req, res, next) =>
+	res.redirect('/blog/article'));
+
+router.get('/article', (req, res, next) =>
 	exusdb.db().any('SELECT * FROM "article_detail" \
 					WHERE NOT trashed AND NOT indraft \
 					ORDER BY post_date DESC')
-		.then((data) => res.render('blog_index', { articles: data }),
-			(reason) => next(_.status(reason, 500)))
+	.then((data) =>
+		res.render('blog_index', { articles: data }),
+			(reason) => next(_.status(reason, 500))
+	)
 );
 
 router.get('/article/post', user.authed, user.req_privilege('post_article'),
@@ -206,24 +213,20 @@ router.get('/article/:id', function (req, res, next) {
 
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
 	var parid = parseInt(req.params.paragraph_id);
-	if (req.body.use_markdown) {
-		req.body.content = marked(req.body.content);
-	} else {
-		// TODO: sanitize text content
-	}
-	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'paragraph', parid ];
+	var content = req.body['use_markdown'] ? 
+		marked(req.body['content']) : 
+		xss.inHTMLData(req.body['content']);
+	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), content, 'paragraph', parid ];
 	exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type, paragraph_id) values ($1, $2, $3, $4, $5, $6)",
 		params).then(() => res.redirect('/blog/article/' + req.params.article_id + '#paragraph-' + parid),
 		(reason) => next(_.statusopt(reason)));
 });
 
 router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
-	if (req.body.use_markdown) {
-		req.body.content = marked(req.body.content);
-	} else {
-		// TODO: sanitize text content
-	}
-	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), req.body.content, 'article' ];
+	var content = req.body['use_markdown'] ? 
+		marked(req.body['content']) : 
+		xss.inHTMLData(req.body['content']);
+	var params = [ parseInt(req.params.article_id), req.user.id, new Date(), content, 'article' ];
 	exusdb.db().none("insert into comment(article_id, commenter_id, comment_date, content, comment_type) values ($1, $2, $3, $4, $5)",
 		params).then(() => res.redirect('/blog/article/' + req.params.article_id + '#comments'),
 		(reason) => next(_.statusopt(reason)));

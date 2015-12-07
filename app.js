@@ -109,6 +109,8 @@ app.use(passport.session());
 
 app.use('/blog', require('./routes/blog'));
 app.use('/user', require('./routes/user').router);
+app.use('/', require('./routes/index'));
+
 app.use('/static', express.static('static'));
 
 var errorHandler = require('./error_handler');

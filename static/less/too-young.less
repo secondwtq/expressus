@@ -1,4 +1,5 @@
 
+@import "prefixer.less";
 @import "eus-define.less";
 
 body {
@@ -29,7 +30,31 @@ body {
 	line-height: 200%;
 	padding: 2em;
 	
-	#footer-body { margin: 0 auto; }
+	#footer-body {
+		margin: 0 auto;
+		#footer-email {
+			&:before { content: '<'; }
+			&:after { content: '>'; }
+			&:before, &:after {
+				display: inline-block;
+				opacity: 0.5;
+			}
+		}
+	}
+	.footer-love {
+		color: crimson;
+		opacity: 0.7;
+		text-shadow: 1px 1px 1px @darken-10;
+		
+		.transition(all ease-in-out 0.7s);
+		line-height: 1em;
+		&:hover {
+			opacity: 1.0;
+			.transform(scale3d(1.5, 1.5, 3.0));
+			text-shadow: 0px 0px 3px @lint-30;
+			line-height: 3em;
+		}
+	}
 }
 	
 a {
@@ -48,10 +73,18 @@ hr {
 		border-style: none;
 		box-shadow: 0 1px 3px @darken-15;
 		border-bottom: 1px dashed @lint-15;
+		
+		&.darker {
+			box-shadow: 0 2px 5px @darken-15;
+			border-bottom: 1px dashed @darken-15;
+		}
 	}
 	&.grayed {
 		border-style: none;
 		border-bottom: 1px solid @lint-30;
+	}
+	@media @mobile-std {
+		margin: 0em 0;
 	}
 }
 
