@@ -89,7 +89,10 @@ router.get('/article', (req, res, next) =>
 );
 
 router.get('/article/post', user.authed, user.req_privilege('post_article'),
-	(req, res, next) => res.render('blog_post', { 'title_': 'Post Article' }));
+	(req, res, next) => res.render('blog_post',
+		_.extend(convertUserDescToIndexUserDesc(req.user),
+			{ 'title_': 'Post Article' }))
+);
 	
 router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 	function (req, res, next) {
@@ -184,6 +187,11 @@ router.post('/article/:id/postdraft', user.authed, user.req_privilege('post_arti
 						)
 					)
 				)
+				// update the draft too so we can recover
+				//	 the Markdown (or sth.) content later
+				.then(() => 
+					t.none('UPDATE "draft" SET content = $2 WHERE article_id = $1',
+						[ id, req.body['content'] ]))
 				.then(() =>
 					t.oneOrNone('UPDATE "article" SET title = $3, subtitle = $4, summary = $5, indraft = FALSE \
 								WHERE id = $1 AND author_id = $2 RETURNING id',

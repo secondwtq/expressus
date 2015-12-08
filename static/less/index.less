@@ -1,0 +1,13 @@
+
+@import "prefixer.less";
+
+.lighter-outer {
+	& > * {
+		.transition(all 0.3s ease-in-out);
+	}
+	&.switched-out {
+		& > * {
+			opacity: 0;
+		}
+	}
+}

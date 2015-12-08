@@ -10,10 +10,11 @@
 		</div>
 		<div id="left-center">
 			<div id="author-intro">
-				<a href="/user/{{user.id}}"><img id="author-avatar" src="{{user.avatar}}"></img></a>
+				<a href="/user/{{author_id}}"><img id="author-avatar" src="{{avatar}}"></img></a>
 				<div id="author-summary">
-					<a href="/user/{{user.id}}" id="author-name">{{user.username}}</a>
-					<div class="author-text">{{user.title}}</div>
+					<div id="author-displayname">{{user_displayname}}</div>
+					<a href="/user/{{author_id}}" id="author-name">@{{username}}</a>
+					<div id="author-text">{{user_title}}</div>
 				</div>
 			</div>
 		</div>

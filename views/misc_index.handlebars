@@ -3,10 +3,10 @@
 	<br />
 	<hr class="dashed darker" />
 	<ul class="indexnav pure-menu-list pure-menu-horizontal">
-		<li class="pure-menu-item"><a class="pure-menu-link indexsublink" href="/blog">Blog</a></li>
-		<li class="pure-menu-item"><a class="pure-menu-link indexsublink" href="/project">Projects</a></li>
-		<li class="pure-menu-item"><a class="pure-menu-link indexsublink" href="/service">Services</a></li>
-		<li class="pure-menu-item"><a class="pure-menu-link indexsublink" href="/about">About</a></li>
+		<li class="pure-menu-item"><a class="pure-menu-link indexsublink sw sw-shorter" href="/blog">Blog</a></li>
+		<li class="pure-menu-item"><a class="pure-menu-link indexsublink sw sw-fadeall" href="/project">Projects</a></li>
+		<li class="pure-menu-item"><a class="pure-menu-link indexsublink sw sw-fadeall" href="/service">Services</a></li>
+		<li class="pure-menu-item"><a class="pure-menu-link indexsublink sw sw-noheight" href="/about">About</a></li>
 	</ul>
 	<hr class="dashed darker" />
 	<br />
@@ -14,6 +14,15 @@
 		<p class="indexdesc">
 			Hi, this is my home on the Internet.
 		</p>
-		<div><a href="/user/login">Login</a></div>
+		{{^user}}
+		<div><a class="sw sw-fadeall" href="/user/login?redirecturl=/">Login</a></div>
+		{{/user}}
 	</div>
 </div>
+
+<script src="/static/external/modernizr.js"></script>
+<script src="/static/external/jquery-2.1.4.js"></script>
+<script src="/static/js/navsw.js"></script>
+<script>
+	navigationSwitchTop('.lighter-outer');
+</script>

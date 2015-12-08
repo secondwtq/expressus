@@ -8,7 +8,8 @@ router.get('/', function (req, res, next) {
 	res.render('misc_index', {
 		layout: 'lighter',
 		'title_': 'too-young.me',
-		'forcetitle': true
+		'forcetitle': true,
+		'user': req.user
 	});
 });
 
