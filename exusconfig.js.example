@@ -1,0 +1,25 @@
+
+var config = {
+	'db': {
+		'host': 'localhost',
+		'port': 5432,
+		'username': 'example',
+		'passwd': '44GC44Gu6aCDfuOCt+OCmeODs+OCt+OCmeODs+ODj+OCmeOCquODgeOCmeODpeOCquODi+ODvH4=',
+		'name': 'example'
+	},
+	'rss': {
+		'numItem': (new Date()).getFullYear() - 1996,
+		'urlfmt': 'https\:\/\/www.example.com/blog/article/%(id)d',
+		'meta': {
+			'title': 'example.com',
+			'description': '',
+			'feed_url': 'https://example.com/feed',
+			'site_url': 'https://example.com/blog',
+			'language': 'zh-cn',
+			'generator': 'expressus, RSS for Node',
+			'copyright': '1996 olive <example@example.com>'
+		}
+	}
+};
+
+module.exports = config;

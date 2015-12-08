@@ -10,7 +10,7 @@ monitor.attach(options);
 var pgp = pgplib(options);
 
 var pg_cnstr = process.env.DATABASE_URL || 
-	sprintf("postgres://%(db_username)s:%(db_passwd)s@%(db_host)s:%(db_port)s/tooyoung", config);
+	sprintf("postgres://%(username)s:%(passwd)s@%(host)s:%(port)s/%(name)s", config['db']);
 
 var connection = undefined;
 
