@@ -7,6 +7,7 @@ var router = express.Router();
 var _ = require('lodash');
 var exusdb = require('../exusdb');
 var user = require('./user');
+var config = require('../exusconfig');
 
 var xss = require('xss-filters');
 
@@ -30,6 +31,7 @@ router.use(function (req, res, next) {
 		args.user = req.user; }
 
 	_.extend(res.locals, args);
+	res.locals['config'] = config;
 	next();
 });
 

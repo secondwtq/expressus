@@ -1,5 +1,6 @@
 
 @import "prefixer.less";
+@import "eus-define.less";
 
 .lighter-outer {
 	& > * {
@@ -9,5 +10,37 @@
 		& > * {
 			opacity: 0;
 		}
+	}
+}
+
+.about-inner {
+	text-align: left;
+	
+	.ab-contact-item {
+		margin-bottom: 12px;
+	}
+	.ab-gpgkey-switch {
+		float: right;
+		.transition(all 0.2s ease-in-out);
+		&.opened { .transform(rotateZ(-180deg)); }
+	}
+}
+.ab-gpgkey-wrap {
+	.transition(none);
+	background-color: @darken-5;
+	border-radius: 1px;
+	@media @mobile-small {
+		border-radius: 0;
+		width: 100%;
+	}
+	#ab-gpgkey {
+		// margin: 0;
+		font-size: x-small;
+		max-height: 36em;
+		text-align: left;
+		
+		margin: 6px;
+		@media @mobile-small {
+			margin: 6px 0; }
 	}
 }

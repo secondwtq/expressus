@@ -3,12 +3,12 @@
 		<span class="ex-smaller">Settings for </span>&lt;{{user.username}}&gt;
 	</h3>
 	<hr class="dashed" />
-	<form class="pure-form pure-form-stacked" method="POST" target="/user/{{user.id}}/settings">
+	<form class="pure-form pure-form-stacked" method="post" action="/user/{{user.id}}/settings">
 		<fieldset>
 		<label for="ctl-email">Email</label>
 		<input name="email" id="ctl-email" readonly value="{{user.email}}" class="login-input pure-input-rounded">
 		<div class="ex-noselect">
-			<input name="public-email" id="ctl-pubemail" type="checkbox">
+			<input name="publicemail" id="ctl-pubemail" type="checkbox" {{#if user.showemail}}checked{{/if}}>
 			<label for="ctl-pubemail" class="ex-inline">Show Email In Profile</label>
 		</div>
 		<label for="ctl-regtime">Register Time</label>

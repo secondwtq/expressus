@@ -1,6 +1,32 @@
-<div class="lighter-inner">
-<i class="fa fa-github"></i>: <a href="https://github.com/secondwtq">https://github.com/secondwtq</a>
-<i class="fa fa-envelope"></i>: too-simple@too-young.me
-
-My GPG Public Key:
+<div class="lighter-inner about-inner">
+	<div class="ab-contact-item">
+		<i class="fa fa-lg fa-github"></i> GitHub:
+		<a href="https://github.com/secondwtq">https://github.com/secondwtq</a>
+	</div>
+	<div class="ab-contact-item">
+		<i class="fa fa-envelope"></i> Email: too-simple#too-young.me
+	</div>
+	<div class="ab-contact-item">
+	My GPG Public Key:
+	<a href="{{gpgkey_url}}"><i class="fa fa-file"></i> key.asc</a>
+	<a href="#" class="ab-gpgkey-switch">
+		<i class="fa fa-lg fa-caret-down">
+		</i>
+	</a>
+	</div>
 </div>
+<div class="ab-gpgkey-wrap">
+<pre id="ab-gpgkey">
+{{gpgkey_content}}
+</pre>
+</div>
+<script src="/static/external/jquery-2.1.4.js"></script>
+<script>
+	$(document).ready(function () {
+		$('.ab-gpgkey-wrap').hide();
+		$('.ab-gpgkey-switch').click(function () {
+			$(this).toggleClass('opened');
+			$('.ab-gpgkey-wrap').slideToggle();
+		});
+	});
+</script>

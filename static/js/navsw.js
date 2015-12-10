@@ -16,9 +16,15 @@ function em2px(elem, input) {
     return (emSize * input);
 }
 
+// TODO: mobile Chrome
+var browser = {
+	'firefox': navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
+	'chrome': /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)	
+};
+
 var option_default = {
 	// disabled now for compatibility issue
-	'enabled': true,
+	'enabled': browser['chrome'],
 	'cssTransform': true,
 	'debugPreventNav': false
 }

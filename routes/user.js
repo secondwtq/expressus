@@ -10,6 +10,7 @@ var passport = require('passport');
 var bcrypt = require('bcrypt');
 
 var exusdb = require('../exusdb');
+var config = require('../exusconfig');
 
 var allowed_setting_field = [ 'title', 'displayname' ];
 var privilege_user_update = [ 'admin' ];
@@ -32,12 +33,17 @@ var authed = function (req, res, next) {
 	res.redirect('/user/login?redirecturl=' + redir);
 };
 
+var has_privilege = function (user, privilege) {
+	if (!user) { return false; }
+	return (_(privilieges[privilege]).contains(user.privilege));
+};
+
 var req_privilege = function (privilege) {
 	return function (req, res, next) {
 		var redir = req.query.redirecturl || req.body.redirecturl || req.path;
 		if (!req.user) {
 			return res.redirect('/user/login?redirecturl=' + redir); }
-		if (_(privilieges[privilege]).contains(req.user.privilege)) { return next(); }
+		if (has_privilege(req.user, privilege)) { return next(); }
 		return res.status(403).send('403: Forbidden');
 	};
 };
@@ -62,16 +68,19 @@ router.get('/login', function (req, res, next) {
 
 router.post('/login', function (req, res, next) {
 	passport.authenticate('local', function (err, user, info) {
+		console.log('logining');
 		if (err) { return next(err); }
 		
-		if (!user) { return res.render('user_login', {
-			layout: 'subpage',
-			'title_': 'Login',
-			failed: true,
-			failed_message: info.message,
-			last_username: req.body.username,
-			redirecturl: req.body.redirecturl
-		}); }
+		if (!user) {
+			return res.render('user_login', {
+				layout: 'subpage',
+				'title_': 'Login',
+				failed: true,
+				failed_message: info.message,
+				last_username: req.body.username,
+				redirecturl: req.body.redirecturl
+			});
+		}
 		
 		req.login(user, function (err) {
 			if (err) { return next(err); }
@@ -95,8 +104,8 @@ router.post('/register', function (req, res, next) {
 	bcrypt.genSalt(10, function (err, salt) {
 		if (err) { return next(err); }
 		bcrypt.hash(req.body.passwd, salt, (err, hashed) => (err) ? next(err) :  
-			exusdb.db().none("INSERT INTO stakeholder(username, passwd, email, register_time) VALUES ($1, $2, $3, $4)",
-				[req.body.username, hashed, req.body.email, new Date()])
+			exusdb.db().none("INSERT INTO stakeholder(username, passwd, email, register_time, avatar) VALUES ($1, $2, $3, $4, $5)",
+				[req.body.username, hashed, req.body.email, new Date(), config['blog']['default_avatar']])
 			.then(() => res.redirect('/user/login'),
 				(reason) => res.status(500).send(reason))
 		);
@@ -141,10 +150,12 @@ router.get('/:id/settings', authed, function (req, res, next) {
 		});
 });
 
-router.post('/:id/settings', function (req, res, next) {
+router.post('/:id/settings', authed, function (req, res, next) {
 	var user_id = parseInt(req.params.id);
-	exusdb.db().none('update stakeholder set displayname=$2, title=$3 where id=$1', 
-		[ user_id, req.body.displayname, req.body.title ]).then(function (data) {
+	if (!can_modify_settings(req.user, user_id)) {
+		return res.status(403).send('403:Forbidden'); }
+	exusdb.db().none('update stakeholder set displayname=$2, title=$3, showemail=$4 where id=$1', 
+		[ user_id, req.body.displayname, req.body.title, req.body['publicemail'] || false ]).then(function (data) {
 			res.redirect('/user/' + user_id + '/settings');
 		}, function (reason) {
 			if (exusdb.error.not_found(reason)) {
@@ -156,5 +167,6 @@ router.post('/:id/settings', function (req, res, next) {
 module.exports = {
 	router,
 	authed,
+	has_privilege,
 	req_privilege
 };

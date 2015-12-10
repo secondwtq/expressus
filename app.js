@@ -55,6 +55,10 @@ var hbs = exphbs.create({
 			if (lhs == rhs) {
 				return opts.fn(this);
 			} else { return opts.inverse(this); }
+		},
+		has_privilege: function (user, privilege, options) {
+			if (require('./routes/user')['has_privilege'](user, privilege)) {
+				return options.fn(this); }
 		}
 	}
 });
@@ -92,12 +96,13 @@ passport.use(new LocalStrategy(
 	{ usernameField: 'username', passwordField: 'passwd' },
 	function (username, passwd, done) {
 		exusdb.db().one(
-			"SELECT * FROM stakeholder WHERE username=$1", [ username ]).
-		then((data) => bcrypt.compare(passwd, data['passwd'], (err, result) => 
-			(err || (!result)) ? done(err, false, { message: 'Username and password doesn\'t match.' }) : done(null, data))
-		, (reason) => (reason.trim() === 'No data returned from the query.') ?
-				done(null, false, { message: 'Username and password doesnot match.' })
-				: done(null, false, { message: reason })
+			"SELECT * FROM stakeholder WHERE username=$1", [ username ]
+		).then((data) => bcrypt.compare(passwd, data['passwd'], (err, result) =>
+			(err || (!result)) ? done(null, false, { message: 'Username and password doesn\'t match.' }) : done(null, data)
+		), (reason) =>
+			(reason['message'].trim() === 'No data returned from the query.') ?
+					done(null, false, { message: 'Username and password doesnot match.' })
+					: done(null, false, { message: 'Unknown error' })
 		);
 	}));
 

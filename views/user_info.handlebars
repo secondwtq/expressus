@@ -9,9 +9,17 @@
 			{{user.username}}
 		{{/if}}
 	</h3>
-	<div class="ex-small">The Hidden Foundation</div>
+	<div class="ex-small">
+		{{#if user.title}}
+			{{user.title}}
+		{{else}}
+			-
+		{{/if}}
+	</div>
+	{{#if user.showemail}}
 	<hr class="dashed" />
 	<div class="ex-small">&lt;{{user.email}}&gt;</div>
+	{{/if}}
 	<hr class="dashed" />
 	<div class="ex-small">Registered: {{datefmt 'L' user.register_time}}</div>
 	<hr class="dashed" />

@@ -10,12 +10,17 @@
 		</div>
 		<div id="left-center">
 			<div id="author-intro">
-				<div id="author-avatar"></div>
+				<a href="{{config.blog.owner.href}}"><img id="author-avatar" src="{{config.blog.owner.avatar}}"></a>
 				<div id="author-summary">
-					<div id="author-displayname"></div>
-					<div id="author-name">secondwtq</div>
-					<div id="author-text">狂热的 Web 开发爱好者</div>
+					<div id="author-displayname">{{config.blog.owner.displayname}}</div>
+					<a href="{{config.blog.owner.href}}" id="author-name">{{config.blog.owner.name}}</a>
+					<div id="author-text">{{config.blog.owner.title}}</div>
 				</div>
+			</div>
+			<br />
+			<div class="socials">
+				<a href="https://github.com/secondwtq"><i class="fa fa-lg fa-github"></i></a>
+				<a href="/feed"><i class="fa fa-lg fa-rss"></i></a>
 			</div>
 		</div>
 	</div>

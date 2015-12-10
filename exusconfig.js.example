@@ -19,6 +19,20 @@ var config = {
 			'generator': 'expressus, RSS for Node',
 			'copyright': '1996 olive <example@example.com>'
 		}
+	},
+	'blog': {
+		'default_avatar': '/static/intermges/avatar.png',
+		'owner': {
+			'avatar': '/static/intermges/avatar.png',
+			'name': '',
+			'title': '',
+			'displayname': '',
+			'href': 'https://example.com'
+		}	
+	},
+	'misc': {
+		'gpgkey_url': '/static/key.asc',
+		'gpgkey_file': './static/key.asc'
 	}
 };
 
