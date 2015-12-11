@@ -106,12 +106,8 @@ passport.use(new LocalStrategy(
 		);
 	}));
 
-passport.serializeUser(function (user, done) {
-	console.log('passport: serializing user ', user.username);
-	done(null, user); });
-passport.deserializeUser(function (user, done) {
-	console.log('passport: deserialize user ', user.username);
-	done(null, user); });
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -129,9 +125,6 @@ app.use(errorHandler.pageNotFound);
 app.use(errorHandler.log);
 app.use(errorHandler.page);
 
-var server = app.listen(process.env.PORT || 8000, function () {
-	var host = server.address().address;
-	var port = server.address().port;
-
-	console.log('Listening @ http://%s:%s', host, port);
-});
+var server = app.listen(process.env['PORT'] || 8000, process.env['HOST'] || '0.0.0.0',
+	() => console.log(`Listening @ http://${server.address().address}:${server.address().port}`)
+);

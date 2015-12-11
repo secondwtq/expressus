@@ -35,7 +35,6 @@ if (option['enabled']) {
 
 var $$ = $(navcont);
 
-console.log($('body').children());
 $('body').children().css(pf['transition'], 'opacity 0.3s ease-in-out');
 
 $$.css(pf['transition'], 'all 0.2s ease-in-out');
