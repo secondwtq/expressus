@@ -4,7 +4,7 @@
 var router = require('express').Router();
 var RSS = require('rss');
 var exusdb = require('../exusdb');
-var config = require('../exusconfig');
+var config = require('../config');
 var _ = require('lodash');
 var sprintf = require('sprintf-js').sprintf;
 

@@ -1,6 +1,6 @@
 
 var sprintf = require('sprintf-js').sprintf;
-var config = require('./exusconfig');
+var config = require('./config');
 var pgplib = require('pg-promise');
 var monitor = require('pg-monitor');
 

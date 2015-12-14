@@ -3,7 +3,7 @@
 
 var router = require('express').Router();
 var _ = require('lodash');
-var config = require('../exusconfig');
+var config = require('../config');
 var fs = require('fs');
 
 router.get('/', function (req, res, next) {
@@ -38,7 +38,9 @@ router.get('/about', function (req, res, next) {
 			resolve(_cache_gpgkey) :
 			fs.readFile(keyfile, 'utf8', (err, data) =>
 				err ? reject(err) :
-					resolve(data)))
+					resolve(_cache_gpgkey = data)
+			)
+		)
 	).then((data) =>
 		res.render('misc_about', {
 			layout: 'lighter',

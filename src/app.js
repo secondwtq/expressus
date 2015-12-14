@@ -3,7 +3,7 @@
 'use strict';
 
 var path = require('path');
-var config = require('./exusconfig');
+var config = require('./config');
 
 var exus_env = { };
 
@@ -31,9 +31,10 @@ var method_override = require('method-override');
 app.get('/hello', function (req, res) {
 	res.send('Hellor Worlder!'); });
 
-// app.set('views', path.join(__dirname, 'views'));
-
+app.set('views', path.join(__dirname, 'views'));
 var hbs = exphbs.create({
+	layoutsDir: path.join(__dirname, 'views/layouts'),
+	partialsDir: path.join(__dirname, 'views/partials'),
 	defaultLayout: 'main',
 	helpers: {
 		plural_auto: function (org, count) {

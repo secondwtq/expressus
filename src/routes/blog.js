@@ -7,7 +7,7 @@ var router = express.Router();
 var _ = require('lodash');
 var exusdb = require('../exusdb');
 var user = require('./user');
-var config = require('../exusconfig');
+var config = require('../config');
 
 var xss = require('xss-filters');
 

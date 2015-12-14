@@ -10,7 +10,7 @@ var passport = require('passport');
 var bcrypt = require('bcrypt');
 
 var exusdb = require('../exusdb');
-var config = require('../exusconfig');
+var config = require('../config');
 
 var allowed_setting_field = [ 'title', 'displayname' ];
 var privilege_user_update = [ 'admin' ];
