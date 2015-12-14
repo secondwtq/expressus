@@ -113,6 +113,12 @@ passport.deserializeUser((user, done) => done(null, user));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function (req, res, next) {
+	res.locals['NODE_ENV'] = process.env['NODE_ENV'];
+	res.locals['node_env_production'] = (process.env['NODE_ENV'] == 'production');
+	next();
+});
+
 app.use('/blog', require('./routes/blog'));
 app.use('/user', require('./routes/user').router);
 app.use('/', require('./routes/index'));
@@ -127,5 +133,12 @@ app.use(errorHandler.log);
 app.use(errorHandler.page);
 
 var server = app.listen(process.env['PORT'] || 8000, process.env['HOST'] || '0.0.0.0',
-	() => console.log(`Listening @ http://${server.address().address}:${server.address().port}`)
+	function () {
+		console.log(`Listening @ http://${server.address().address}:${server.address().port}`);
+		var env_str = process.env['NODE_ENV'];
+		if (env_str === undefined) {
+			env_str = 'development'; }
+		process.env['NODE_ENV'] = env_str;
+		console.log(`Running under '${env_str}' (${app.get('env')}).`);
+	}
 );

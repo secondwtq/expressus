@@ -6,7 +6,7 @@ var monitor = require('pg-monitor');
 
 var options = { };
 
-monitor.attach(options);
+// monitor.attach(options);
 var pgp = pgplib(options);
 
 var pg_cnstr = process.env.DATABASE_URL || 
