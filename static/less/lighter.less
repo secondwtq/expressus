@@ -95,4 +95,14 @@ a {
 	}
 }
 
-#footer { color: gray; }
+#footer {
+	color: gray;
+	.footer-license {
+		color: fade(gray, 65%);
+		a {
+			color: fade(gray, 85%);
+			&:hover { color: gray; }
+			&:active { color: darken(gray, 20%); }
+		}
+	}
+}

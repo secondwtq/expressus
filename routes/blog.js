@@ -84,7 +84,8 @@ router.get('/article', (req, res, next) =>
 	.then((data) =>
 		res.render('blog_index', {
 			'title_': 'Articles',
-			'articles': data
+			'articles': data,
+			'show_license': true
 		}),
 	(reason) => next(_.status(reason, 500))
 	)
@@ -234,7 +235,7 @@ router.post('/article/post', user.authed, user.req_privilege('post_article'), fu
 });
 
 router.get('/article/:id', function (req, res, next) {
-	var args = { };
+	var args = { 'show_license': true };
 	args.has_comment = () => !(args.comments === undefined);
 	exusdb.db().oneOrNone("SELECT * FROM article_detail WHERE id=$1 AND NOT trashed", [ parseInt(req.params.id) ])
 		.then(function (data) {
