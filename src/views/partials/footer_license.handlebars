@@ -1,7 +1,11 @@
 <div class="footer-license">
 	<div>
 		<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" >
+			<!-- stackoverflow.com/questions/4476526/do-i-use-img-object-or-embed-for-svg-files -->
+			<!-- TODO: consider both click event and fallback -->
+			<object data="/static/external/by-sa.svg" type="image/svg+xml" style="pointer-events: none;">
+				<img alt="Creative Commons License" src="/static/external/by-sa.png" >
+			</object>
 		</a>
 	</div>
 	This site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">

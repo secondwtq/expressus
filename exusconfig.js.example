@@ -32,7 +32,8 @@ var config = {
 	},
 	'misc': {
 		'gpgkey_url': '/static/key.asc',
-		'gpgkey_file': './static/key.asc'
+		'gpgkey_file': './static/key.asc',
+		'dollar': 'zepto'
 	}
 };
 

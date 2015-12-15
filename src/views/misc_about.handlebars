@@ -15,18 +15,24 @@
 	</a>
 	</div>
 </div>
-<div class="ab-gpgkey-wrap">
-<pre id="ab-gpgkey">
-{{gpgkey_content}}
-</pre>
+<div class="ab-gpgkey-wrap-wrap" style="-webkit-transition: none; transition: none;">
+	<div class="ab-gpgkey-wrap">
+	<pre id="ab-gpgkey">
+{{gpgkey_content}}</pre>
+	</div>
+	<a id="ab-gpgkey-copy" href="#" data-clipboard-target="#ab-gpgkey">
+		<i class="fa fa-clipboard"> Copy to clipboard</i>
+	</a>
 </div>
 {{> ref_dollar}}
+{{> ref_clipboard}}
 <script>
 	$(document).ready(function () {
-		$('.ab-gpgkey-wrap').hide();
+		$('.ab-gpgkey-wrap-wrap').hide();
 		$('.ab-gpgkey-switch').click(function () {
 			$(this).toggleClass('opened');
-			$('.ab-gpgkey-wrap').slideToggle();
+			$('.ab-gpgkey-wrap-wrap').slideToggle();
 		});
 	});
+	(new Clipboard('#ab-gpgkey-copy'));
 </script>

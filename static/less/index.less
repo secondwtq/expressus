@@ -17,30 +17,32 @@
 	text-align: left;
 	
 	.ab-contact-item {
-		margin-bottom: 12px;
-	}
+		margin-bottom: 12px; }
 	.ab-gpgkey-switch {
 		float: right;
 		.transition(all 0.2s ease-in-out);
 		&.opened { .transform(rotateZ(-180deg)); }
 	}
 }
-.ab-gpgkey-wrap {
+.ab-gpgkey-wrap-wrap {
 	.transition(none);
-	background-color: @darken-5;
-	border-radius: 1px;
 	@media @mobile-small {
-		border-radius: 0;
-		width: 100%;
-	}
-	#ab-gpgkey {
-		// margin: 0;
-		font-size: x-small;
-		max-height: 36em;
-		text-align: left;
-		
-		margin: 6px;
+		width: 100%; }
+	.ab-gpgkey-wrap {
+		background-color: @darken-5;
+		border-radius: 1px;
+		padding: 6px;
+		margin-bottom: 0.3em;
 		@media @mobile-small {
-			margin: 6px 0; }
+			padding: 6px 0;
+			border-radius: 0;
+			width: 100%;
+		}
+		#ab-gpgkey {
+			margin: 0;
+			font-size: x-small;
+			max-height: 36em;
+			text-align: left;
+		}
 	}
 }

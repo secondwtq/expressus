@@ -50,8 +50,18 @@ a.anchor-sp:hover { color: white; }
 }
 
 #left-container {
-	transition: all 1s ease-in-out;
+	/* crappy on IE */
+	transition: all 0.3s ease-in-out;
 	width: 25%;
+}
+
+/* IE/Edge hacks */
+/* transitions only for IE10, IE11, Edge */
+@supports (-ms-accelerator:true) {
+	#left-container { transition: none; }
+}
+@media screen\0 {
+	#left-container { transition: none; }
 }
 
 #center-container {
