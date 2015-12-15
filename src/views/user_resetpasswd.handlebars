@@ -1,0 +1,24 @@
+<div class="subpage-container login-container">
+	<h3 class="subpage-title">Reset Password</h3>
+	<div class="login-failed-msg">{{failed_message}}</div>
+	<div class="login-succeeded-msg">{{succeeded_message}}</div>
+	<form class="pure-form" action="/user/{{user.id}}/reset_passwd" method="post">
+		<fieldset class="pure-group">
+			<div>Username: &lt;{{user.username}}&gt;</div>
+			<br />
+			<input type="password" name="passwdorg" placeholder="Original Password" class="login-input">
+		</fieldset>
+		<fieldset class="pure-group">
+			<input type="password" name="passwdnew" placeholder="New Password" class="login-input">
+			<input type="password" name="passwdnewr" placeholder="Retype new Password" class="login-input">
+		</fieldset>
+		<button type="submit" class="pure-button pure-button-primary">Submit</button>
+		{{#if redirecturl}}
+		<a href="{{redirecturl}}">Back</a>
+		{{/if}}
+		{{^redirecturl}}
+		<a href="#">Back</a>
+		{{/redirecturl}}
+		<input type="text" name="redirecturl" class="ex-hidden" value="{{redirecturl}}">
+	</form>
+</div>

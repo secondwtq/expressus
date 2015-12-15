@@ -3,7 +3,7 @@
 		<span class="ex-smaller">Settings for </span>&lt;{{user.username}}&gt;
 	</h3>
 	<hr class="dashed" />
-	<form class="pure-form pure-form-stacked" method="post" action="/user/{{user.id}}/settings">
+	<form class="pure-form pure-form-stacked" method="post" action="/user/{{user.id}}/reset_passwd">
 		<fieldset>
 		<label for="ctl-email">Email</label>
 		<input name="email" id="ctl-email" readonly value="{{user.email}}" class="login-input pure-input-rounded">
@@ -17,8 +17,9 @@
 		<input name="displayname" id="ctl-displayname" class="login-input pure-input-rounded" value="{{user.displayname}}">
 		<label for="ctl-title">Description</label>
 		<input name="title" id="ctl-title" class="login-input pure-input-rounded" value="{{user.title}}">
+		<div><a href="/user/{{user.id}}/reset_passwd?redirecturl=/user/{{user.id}}/settings">Reset Password</a></div>
 		<br />
-		<button type="submit" class="pure-button">Submit</button>
+		<button type="submit" class="pure-button pure-button-primary">Submit</button>
 		</fieldset>
 	</form>
 </div>

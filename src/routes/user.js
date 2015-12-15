@@ -124,11 +124,7 @@ router.get('/:id', function (req, res, next) {
 				display_settings: can_modify_settings(req.user, user_id),
 				'title_': `User ${data['username']}`
 			});
-		}, function (reason) {
-			if (exusdb.error.not_found(reason)) {
-				res.status(404).send('404: Page not found'); }
-			else { res.send(toString(reason), 500); }
-		});
+		}, (err) => next({ 'status': 404, 'message': 'user not found' }));
 });
 
 router.get('/:id/settings', authed, function (req, res, next) {
@@ -142,11 +138,7 @@ router.get('/:id/settings', authed, function (req, res, next) {
 				user: data,
 				'title_': `Settings of ${data['username']}`
 			});
-		}, function (reason) {
-			if (exusdb.error.not_found(reason)) {
-				res.status(404).send('404: Page not found'); }
-			else { res.send(toString(reason), 500); }
-		});
+		}, (err) => next({ 'status': 404, 'message': 'user not found' }));
 });
 
 router.post('/:id/settings', authed, function (req, res, next) {
@@ -161,6 +153,63 @@ router.post('/:id/settings', authed, function (req, res, next) {
 				res.status(404).send('404: Page not found'); }
 			else { res.send(toString(reason), 500); }
 		});
+});
+
+router.get('/:id/reset_passwd', authed, function (req, res, next) {
+	var user_id = parseInt(req.params.id);
+	if (!can_modify_settings(req.user, user_id)) {
+		return next({ 'status': 403,
+					'message': 'you are not authorized to modify password' });
+	}
+	exusdb.db().oneOrNone('SELECT * FROM stakeholder WHERE id=$1', [ user_id ])
+	.then(function (user) {
+		if (!user) {
+			return next({ 'status': 404, 'message': 'user not found' }); }
+		return res.render('user_resetpasswd', {
+			layout: 'subpage', user,
+			'redirecturl': req.query['redirecturl']
+		});
+	}, () => next({ 'status': 500 }));
+});
+
+router.post('/:id/reset_passwd', authed, function (req, res, next) {
+	var user_id = parseInt(req.params.id);
+	if (!can_modify_settings(req.user, user_id)) {
+		return next({ 'status': 403,
+					'message': 'you are not authorized to modify password' });
+	}
+
+	exusdb.db().oneOrNone('SELECT * FROM stakeholder WHERE id=$1', [ user_id ])
+	.then(function (user) {
+		if (req.body['passwdnew'] != req.body['passwdnewr']) {
+			return res.render('user_resetpasswd', {
+				layout: 'subpage', user,
+				'redirecturl': req.body['redirecturl'],
+				'failed_message': 'New password doesnot match'
+			});
+		}
+		if (!user) {
+			return next({ 'status': 404, 'message': 'user not found' }); }
+		bcrypt.compare(req.body['passwdorg'], user['passwd'], (err, result) =>
+			(err || (!result)) ? res.render('user_resetpasswd', {
+				layout: 'subpage', user,
+				'redirecturl': req.body['redirecturl'],
+				'failed_message': 'Original password doesnot match'
+			}) :
+			bcrypt.genSalt(10, function (err, salt) {
+				if (err) { return next(err); }
+				bcrypt.hash(req.body['passwdnew'], salt, (err, hashed) => (err) ? next(err) :  
+					exusdb.db().none("UPDATE stakeholder SET passwd = $2 WHERE id = $1",
+						[ user_id, hashed ])
+					.then(() => res.render('user_resetpasswd', {
+						layout: 'subpage', user,
+						'redirecturl': req.body['redirecturl'],
+						'succeeded_message': 'Password modified.'
+					}), (reason) => next({ 'status': 500 }))
+				);
+			})
+		);
+	}, () => next({ 'status': 500 }));
 });
 
 module.exports = {
