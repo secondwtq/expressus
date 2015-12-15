@@ -31,7 +31,6 @@ router.use(function (req, res, next) {
 		args.user = req.user; }
 
 	_.extend(res.locals, args);
-	res.locals['config'] = config;
 	next();
 });
 

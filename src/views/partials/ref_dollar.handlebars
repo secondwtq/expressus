@@ -1,0 +1,8 @@
+
+{{#ifeq config.misc.dollar "jquery"}}
+{{> ref_jquery}}
+{{/ifeq}}
+{{#ifeq config.misc.dollar "zepto"}}
+{{> ref_zepto}}
+<script src="/static/js/zepto-addon-exp.js"></script>
+{{/ifeq}}

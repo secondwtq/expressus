@@ -4,7 +4,7 @@
 'use strict';
 var navigationSwitchTop;
 
-(function () {
+(function ($) {
 
 var pf = {
 	'transition': Modernizr.prefixedCSS('transition'),
@@ -92,4 +92,4 @@ $('.sw').click(function (e) {
 }
 }
 
-}());
+}(window.jQuery || window.Zepto));

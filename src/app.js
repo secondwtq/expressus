@@ -116,6 +116,7 @@ app.use(passport.session());
 app.use(function (req, res, next) {
 	res.locals['NODE_ENV'] = process.env['NODE_ENV'];
 	res.locals['node_env_production'] = (process.env['NODE_ENV'] == 'production');
+	res.locals['config'] = config;
 	next();
 });
 
