@@ -3,10 +3,12 @@
 	<div class="login-failed-msg">{{failed_message}}</div>
 	<div class="login-succeeded-msg">{{succeeded_message}}</div>
 	<form class="pure-form" action="/user/{{user.id}}/reset_passwd" method="post">
+		<div>Username: &lt;{{user.username}}&gt;</div>
+		<!--<br />-->
 		<fieldset class="pure-group">
-			<div>Username: &lt;{{user.username}}&gt;</div>
-			<br />
-			<input type="password" name="passwdorg" placeholder="Original Password" class="login-input">
+			<!-- AWESOME: autofocus -->
+			<!-- TODO: on iOS it's unavailable -->
+			<input type="password" autofocus name="passwdorg" placeholder="Original Password" class="login-input">
 		</fieldset>
 		<fieldset class="pure-group">
 			<input type="password" name="passwdnew" placeholder="New Password" class="login-input">

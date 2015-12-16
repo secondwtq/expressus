@@ -3,8 +3,14 @@
 	{{#failed}}<div class="login-failed-msg">{{failed_message}}</div>{{/failed}}
 	<form class="pure-form" action="/user/login" method="post">
 		<fieldset class="pure-group">
+			{{#if last_username}}
 			<input type="text" name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
+			<input type="password" autofocus name="passwd" placeholder="Password" class="login-input">
+			{{/if}}
+			{{^last_username}}
+			<input type="text" autofocus name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
 			<input type="password" name="passwd" placeholder="Password" class="login-input">
+			{{/last_username}}
 		</fieldset>
 		<button type="submit" class="pure-button pure-button-primary">Login</button>
 		<a href="/user/register">Register</a>

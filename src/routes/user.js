@@ -181,9 +181,10 @@ router.post('/:id/reset_passwd', authed, function (req, res, next) {
 
 	exusdb.db().oneOrNone('SELECT * FROM stakeholder WHERE id=$1', [ user_id ])
 	.then(function (user) {
+		const title_ = 'Reset password';
 		if (req.body['passwdnew'] != req.body['passwdnewr']) {
 			return res.render('user_resetpasswd', {
-				layout: 'subpage', user,
+				layout: 'subpage', user, title_,
 				'redirecturl': req.body['redirecturl'],
 				'failed_message': 'New password doesnot match'
 			});
@@ -192,7 +193,7 @@ router.post('/:id/reset_passwd', authed, function (req, res, next) {
 			return next({ 'status': 404, 'message': 'user not found' }); }
 		bcrypt.compare(req.body['passwdorg'], user['passwd'], (err, result) =>
 			(err || (!result)) ? res.render('user_resetpasswd', {
-				layout: 'subpage', user,
+				layout: 'subpage', user, title_,
 				'redirecturl': req.body['redirecturl'],
 				'failed_message': 'Original password doesnot match'
 			}) :
@@ -202,7 +203,7 @@ router.post('/:id/reset_passwd', authed, function (req, res, next) {
 					exusdb.db().none("UPDATE stakeholder SET passwd = $2 WHERE id = $1",
 						[ user_id, hashed ])
 					.then(() => res.render('user_resetpasswd', {
-						layout: 'subpage', user,
+						layout: 'subpage', user, title_,
 						'redirecturl': req.body['redirecturl'],
 						'succeeded_message': 'Password modified.'
 					}), (reason) => next({ 'status': 500 }))

@@ -36,22 +36,22 @@
 			
 			<form id="form-post" class="pure-form pure-form-stacked" method="POST" action="/blog/article/post">
 				<fieldset class="pure-group" id="titleset">
-					<input type="text" name="title" placeholder="Title" class="pure-u-4-5" value="{{title}}">
+					<input type="text" autofocus name="title" placeholder="Title" class="pure-u-4-5" value="{{title}}">
 					<input type="text" name="subtitle" placeholder="Subtitle" class="pure-u-4-5" value="{{subtitle}}">
 					<textarea id="postsummary" name="summary" placeholder="Summary">{{summary}}</textarea>
 				</fieldset>
 				<hr class="dashed" />
 				<textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
 				<hr class="dashed" />
-				<button class="pure-button">Preview</button>
+				<button class="pure-button" id="btn-preview" type="button">Preview</button>
 				{{#if indraft}}
-				<button class="pure-button" id="save-to-draft" formaction="/blog/article/{{id}}/draft">Save to Draft</button>
+				<button class="pure-button" formaction="/blog/article/{{id}}/draft">Save to Draft</button>
 				<button type="submit" class="pure-button" formaction="/blog/article/{{id}}/postdraft">Post</button>
 				<a href="/blog/article/{{id}}/delete?redirecturl=/blog/article/draft&backurl=/blog/article/{{id}}/draft">
 					<button type="button" class="pure-button">Delete</button>
 				</a>
 				{{else}}
-				<button class="pure-button" id="save-to-draft" formaction="/blog/article/draft">Save to Draft</button>
+				<button class="pure-button" formaction="/blog/article/draft">Save to Draft</button>
 				<button type="submit" class="pure-button" formaction="/blog/article/post">Post</button>
 				{{/if}}
 				<br/>
@@ -61,15 +61,22 @@
 	
 </div>
 
+<div class="postp-cont">
+	<div class="postp-dialog">
+		<div class="postp-tr">
+			<a class="postp-trclose" onclick="document.querySelector('.postp-cont').classList.remove('show')">
+				<i class="material-icons md-16 md-icon-custom">close</i>
+			</a>
+		</div>
+		<div class="postp">
+			<p>Some Preview</p>
+		</div>
+	</div>
+</div>
 <script>
-	function postFormCustomized(formname, action) {
-		var form = document.getElementById(formname);
-		var oldaction = form.action;
-		form.action = action;
-		form.submit();
-		form.action = oldaction;
-	}
-	$('#save-to-draft').on('click', function () {
-		
+	document.addEventListener("DOMContentLoaded", function () {
+		document.getElementById('btn-preview').addEventListener("click", function () {
+			document.getElementsByClassName('postp-cont')[0].classList.add('show');
+		});
 	});
 </script>
