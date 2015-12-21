@@ -1,18 +1,36 @@
 <div class="lighter-inner about-inner">
 	<div class="ab-contact-item">
-		<i class="fa fa-lg fa-github"></i> GitHub:
+		<span>
+			<i class="fa fa-lg fa-github ex-ial-mid"></i>
+			<span class="ex-ial-mid">GitHub: </span>
+		</span>
 		<a href="https://github.com/secondwtq">https://github.com/secondwtq</a>
 	</div>
 	<div class="ab-contact-item">
-		<i class="fa fa-envelope"></i> Email: too-simple#too-young.me
+		<span>
+			<i class="material-icons ex-ial-mid">email</i>
+			<span class="ex-ial-mid">Email: </span>
+		</span>
+		<span class="ex-ial-mid">too-simple#too-young.me</span>
 	</div>
 	<div class="ab-contact-item">
-	My GPG Public Key:
-	<a href="{{gpgkey_url}}"><i class="fa fa-file"></i> key.asc</a>
-	<a href="#" class="ab-gpgkey-switch">
-		<i class="fa fa-lg fa-caret-down">
-		</i>
-	</a>
+		<span>Telegram: </span>
+		<a href="https://telegram.me/secondwtq">https://telegram.me/secondwtq</a>
+	</div>
+	<div class="ab-contact-item">
+		<span>
+			<i class="material-icons ex-ial-mid">enhanced_encryption</i>
+			<span class="ex-ial-mid">My GPG Public Key:</span>
+		</span>
+		<span style="float: right;">
+			<a href="{{gpgkey_url}}" class="ex-ial-mid">
+				<i class="material-icons ex-ial-mid">file_download</i>
+				<span class="ex-ial-mid">key.asc</span>
+			</a>
+			<a href="#" class="ab-gpgkey-switch ex-ial-mid">
+				<i class="material-icons">arrow_drop_down</i>
+			</a>
+		</span>
 	</div>
 </div>
 <div class="ab-gpgkey-wrap-wrap" style="-webkit-transition: none; transition: none;">
@@ -20,9 +38,12 @@
 	<pre id="ab-gpgkey">
 {{gpgkey_content}}</pre>
 	</div>
-	<a id="ab-gpgkey-copy" href="#" data-clipboard-target="#ab-gpgkey">
-		<i class="fa fa-clipboard"> Copy to clipboard</i>
-	</a>
+	<div>
+		<a id="ab-gpgkey-copy" href="#" data-clipboard-target="#ab-gpgkey">
+			<i class="material-icons ex-ial-mid">content_copy</i>
+			<span class="ex-ial-mid">Copy to clipboard</span>
+		</a>
+	</div>
 </div>
 {{> ref_dollar}}
 {{> ref_clipboard}}
