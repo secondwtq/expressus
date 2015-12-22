@@ -64,19 +64,72 @@
 <div class="postp-cont">
 	<div class="postp-dialog">
 		<div class="postp-tr">
-			<a class="postp-trclose" onclick="document.querySelector('.postp-cont').classList.remove('show')">
+			<a class="postp-trclose">
 				<i class="material-icons md-16 md-icon-custom">close</i>
 			</a>
 		</div>
+		<div class="postp-loading">
+			<div class="loading">{{> comp_spinner_material spinner_radius=64}}</div>
+			<div class="error">
+				<div><i class="material-icons md-64">error</i></div>
+				An error occurred.
+			</div>
+		</div>
 		<div class="postp">
+			<div class="postp-content">
+			</div>
 			<p>Some Preview</p>
 		</div>
 	</div>
 </div>
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
+		
+		function setLoadingViewStatus(cls) {
+			document.getElementsByClassName('postp-loading')[0].className = "postp-loading " + cls;
+		}
+		
+		document.getElementsByClassName('postp-trclose')[0].addEventListener("click", function () {
+			setLoadingViewStatus("");
+			document.querySelector('.postp-cont').classList.remove('show');
+			document.getElementsByClassName('postp-content')[0].innerHTML = "";
+		});
+		
 		document.getElementById('btn-preview').addEventListener("click", function () {
 			document.getElementsByClassName('postp-cont')[0].classList.add('show');
+			setLoadingViewStatus("loading");
+			document.getElementsByClassName('postp-content')[0].innerHTML = "";
+			
+			function error () {
+				setLoadingViewStatus("error");
+			}
+			
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '/api/splitpara', true);
+			xhr.setRequestHeader('Accept', 'application/json');
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					var paras = JSON.parse(xhr.response);
+					var ret = "";
+					for (var i = 0; i < paras.length; i++) {
+						ret += paras[i];
+					}
+					document.getElementsByClassName('postp-content')[0].innerHTML = ret;
+					setLoadingViewStatus("");
+				} else {
+					error();
+				}
+			};
+			xhr.onerror = function () {
+				error();
+			};
+			xhr.send(JSON.stringify({
+				'title': document.querySelector('[name="title"]').value,
+				'subtitle': document.querySelector('[name="subtitle"]').value,
+				'summary': document.querySelector('[name="summary"]').value,
+				'content': document.querySelector('[name="content"]').value
+			}));
 		});
 	});
 </script>

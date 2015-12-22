@@ -12,10 +12,7 @@ var config = require('../config');
 var xss = require('xss-filters');
 
 var marked = require('marked');
-marked.setOptions({
-	gfm: true, tables: true,
-	sanitize: true,
-});
+var markdown = require('../misc/markdown');
 
 router.use(function (req, res, next) {
 	var logged_in_class = function () {
@@ -52,25 +49,6 @@ function convertUserDescToIndexUserDesc(src) {
 		'user_title': src['title'],
 		'user_displayname': src['displayname']
 	};
-}
-
-var cheerio = require('cheerio');
-
-function markAndSplit(source) {
-	var $ = cheerio;
-	var $$ = $.load(`<div id="outermost">${marked(source)}</div>`)('#outermost > *');
-	var last_child = $('<div></div>');
-	var paragraphs = [ ];
-	$$.each((index, element) => {
-		var tag = element.tagName;
-		last_child.append(element);
-		if (tag == 'p' || tag == 'ul' || tag == 'ol' || tag == 'pre') {
-			paragraphs.push(last_child.html());
-			var new_element = $('<div></div>');
-			last_child = new_element;
-		}
-	});
-	return paragraphs;
 }
 
 router.get('/', (req, res, next) =>
@@ -150,15 +128,18 @@ router.get('/article/:id/draft', user.authed, function (req, res, next) {
 	.then((data) => (data === null) ? 
 		next(_.throw(404, 'no such entry or invalid user'))
 		:
-		res.render('blog_post', {
-			'indraft': true,
-			'title_': 'Edit Draft',
-			'id': data['id'],
-			'title': data['title'],
-			'subtitle': data['subtitle'],
-			'summary': data['summary'],
-			'content': data['content']
-		})
+		res.render('blog_post', 
+			// TODO: get the correct user?
+			_.extend(convertUserDescToIndexUserDesc(req.user), {
+				'indraft': true,
+				'title_': 'Edit Draft',
+				'id': data['id'],
+				'title': data['title'],
+				'subtitle': data['subtitle'],
+				'summary': data['summary'],
+				'content': data['content']
+			})
+		)
 	).catch((err) => console.log(err));
 });
 
@@ -183,11 +164,14 @@ router.post('/article/:id/postdraft', user.authed, user.req_privilege('post_arti
 		exusdb.db().tx(function (t) {
 			return t.oneOrNone('SELECT * FROM "article_draft" WHERE id = $1 AND author_id = $2', [ id, req.user['id'] ])
 				.then((article) => (article === null) ? 
-					next(_.throw(404, 'no such entry or invalid user')) :
-					t.batch(_.map(markAndSplit(req.body['content']), (para) => 
+					next(_.throw(404, 'no such entry or invalid user'))
+					:
+					markdown.markAndSplitAsync(req.body['content'], 'article')
+					.then((paras) =>
+						t.batch(_.map(paras, (para) =>
 							t.none('INSERT INTO "paragraph"(article_id, content) VALUES ($1, $2)', [ id, para ])
-						)
-					)
+						))
+					).catch((err) => _.throw(400, err.toString()))
 				)
 				// update the draft too so we can recover
 				//	 the Markdown (or sth.) content later
@@ -219,17 +203,22 @@ router.post('/article/draft', user.authed, user.req_privilege('post_article'),
 
 // post article - direct
 router.post('/article/post', user.authed, user.req_privilege('post_article'), function (req, res, next) {
-	var id;
 	exusdb.db().tx((t) =>
 		t.one('INSERT INTO "article" (author_id, post_date, title, subtitle, summary) \
 			VALUES ($1, $2, $3, $4, $5) RETURNING id', 
 			[ req.user['id'], new Date(), req.body['title'], req.body['subtitle'], req.body['summary'] ])
-		.then((id_) =>
-			t.batch(_.map(markAndSplit(req.body['content']), (para) => t.none('INSERT INTO "paragraph" \
-				(article_id, content) VALUES ($1, $2)', [ (id = parseInt(id_['id'])), para ])))
-		)
+		.then((id_) => {
+			var id = parseInt(id_['id']);
+			markdown.markAndSplitAsync(req.body['content'], 'article')
+			.then((paras) =>
+				t.batch(_.map(paras, (para) =>
+					t.none('INSERT INTO "paragraph"(article_id, content) VALUES ($1, $2)', [ id, para ])
+				))
+			).catch((err) => _.throw(400, err.toString()));
+			return Promise.resolve(id);
+		})
 	)
-	.then(() => res.redirect(`/blog/article/${id}`))
+	.then((id) => res.redirect(`/blog/article/${id}`))
 	.catch((err) => console.log(err));
 });
 
@@ -260,6 +249,7 @@ router.get('/article/:id', function (req, res, next) {
 
 // POST paragraph comment
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
+	marked.setOptions(config['comment']);
 	var parid = parseInt(req.params.paragraph_id);
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 
@@ -272,6 +262,7 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed,
 
 // POST article comment
 router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
+	marked.setOptions(config['comment']);
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 
 		xss.inHTMLData(req.body['content']);

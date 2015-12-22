@@ -17,3 +17,13 @@
 * Picture Upload.
 
 * Paging and archives.
+
+* Article Preview.
+
+* Comment Preview.
+
+* Markdown Styling.
+
+* OAuth2 integration - GitHub, Twitter (passport?)
+
+* Syntax highlighting (with language name output)

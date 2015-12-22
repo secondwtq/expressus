@@ -1,4 +1,3 @@
-/// <reference path="typings/node/node.d.ts"/>
 
 'use strict';
 
@@ -60,6 +59,18 @@ var hbs = exphbs.create({
 		has_privilege: function (user, privilege, options) {
 			if (require('./routes/user')['has_privilege'](user, privilege)) {
 				return options.fn(this); }
+		},
+		"math": function(lvalue, operator, rvalue, options) {
+			lvalue = parseFloat(lvalue);
+			rvalue = parseFloat(rvalue);
+				
+			return {
+				"+": lvalue + rvalue,
+				"-": lvalue - rvalue,
+				"*": lvalue * rvalue,
+				"/": lvalue / rvalue,
+				"%": lvalue % rvalue
+			} [operator];
 		}
 	}
 });
@@ -69,6 +80,7 @@ app.set('view engine', 'handlebars');
 app.use(logger('dev'));
 app.use(cookie_parser());
 app.use(body_parser.urlencoded({ extended: true }));
+app.use(body_parser.json());
 app.use(method_override());
 
 // app.use(function (err, req, res, next) {
@@ -127,6 +139,7 @@ app.use('/', require('./routes/index'));
 app.use('/feed', require('./routes/feed'));
 
 app.use('/static', express.static('static'));
+app.use('/api', require('./routes/api'));
 
 var errorHandler = require('./error_handler');
 app.use(errorHandler.pageNotFound);
