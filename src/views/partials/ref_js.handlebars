@@ -1,0 +1,5 @@
+{{#if node_env_production}}
+<script src="/static/js/{{src}}.min.js"></script>
+{{else}}
+<script src="/static/js/{{src}}.js"></script>
+{{/if}}

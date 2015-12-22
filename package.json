@@ -36,5 +36,9 @@
     "sprintf-js": "^1.0.2",
     "validator": "^4.4.0",
     "xss-filters": "^1.2.6"
+  },
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.0"
   }
 }
