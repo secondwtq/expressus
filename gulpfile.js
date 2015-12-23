@@ -7,6 +7,7 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify'); 
 var minifyCSS = require('gulp-minify-css');
 var del = require('del');
+var tsb = require('gulp-tsb');
 
 gulp.task('default', function () {
     
@@ -17,7 +18,7 @@ function buildLess(isDist) {
             .pipe(less());
     if (isDist) {
         r = r.pipe(minifyCSS()); }
-    return r.pipe(dest('./static/css'));
+    return r.pipe(gulp.dest('./static/css'));
 }
 
 function buildJS(isDist) {
@@ -26,7 +27,15 @@ function buildJS(isDist) {
         r = r.pipe(uglify())
             .pipe(rename({ 'suffix': '.min' }));
     }
-    return r.pipe(dest('./static/js'));    
+    return r.pipe(gulp.dest('./static/js'));    
+}
+
+var tsConfig = tsb.create('src/tsconfig.json');
+function buildTS(isDist) {
+    var r = src([ 'typings/**/*.ts', 'src/**/*.ts' ])
+            .pipe(tsConfig())
+            .pipe(gulp.dest('src'));
+    return r;
 }
 
 gulp.task('clean', () =>
@@ -39,10 +48,15 @@ gulp.task('build-dist', () =>
     gulp.start('build-css:dist', 'build-js:dist')
 );
 
+gulp.task('build-less', buildLess.bind(null, false));
 gulp.task('build-css', buildLess.bind(null, false));
-gulp.task('build-js', buildJS.bind(null, false));
+gulp.task('build-less:dist', buildLess.bind(null, true));
 gulp.task('build-css:dist', buildLess.bind(null, true));
+
+gulp.task('build-js', buildJS.bind(null, false));
 gulp.task('build-js:dist', buildJS.bind(null, true));
+
+gulp.task('build-ts', buildTS.bind(null, false));
 
 gulp.task('watch-css', () =>
     gulp.watch('./src/static/less/*.less', [ 'build-css' ])

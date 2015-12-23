@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "emitBOM": false,
+        "charset": "utf-8",
+        "module": "commonjs"
+    }
+}

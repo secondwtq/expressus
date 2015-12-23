@@ -29,6 +29,8 @@ var method_override = require('method-override');
 //	string patterns, regexs
 app.get('/hello', function (req, res) {
 	res.send('Hellor Worlder!'); });
+    
+var model = require('./model/model');
 
 app.set('views', path.join(__dirname, 'views'));
 var hbs = exphbs.create({
@@ -57,7 +59,7 @@ var hbs = exphbs.create({
 			} else { return opts.inverse(this); }
 		},
 		has_privilege: function (user, privilege, options) {
-			if (require('./routes/user')['has_privilege'](user, privilege)) {
+			if (model.Auth.hasPrivilege(user, model.Auth.Privilege[privilege])) {
 				return options.fn(this); }
 		},
 		"math": function(lvalue, operator, rvalue, options) {
@@ -111,7 +113,9 @@ passport.use(new LocalStrategy(
 		exusdb.db().one(
 			"SELECT * FROM stakeholder WHERE username=$1", [ username ]
 		).then((data) => bcrypt.compare(passwd, data['passwd'], (err, result) =>
-			(err || (!result)) ? done(null, false, { message: 'Username and password doesn\'t match.' }) : done(null, data)
+			(err || (!result)) ? done(null, false, { message: 'Username and password doesn\'t match.' })
+            :
+            (data['id'] = parseInt(data['id']), done(null, data))
 		), (reason) =>
 			(reason['message'].trim() === 'No data returned from the query.') ?
 					done(null, false, { message: 'Username and password doesnot match.' })
@@ -141,7 +145,7 @@ app.use('/feed', require('./routes/feed'));
 app.use('/static', express.static('static'));
 app.use('/api', require('./routes/api'));
 
-var errorHandler = require('./error_handler');
+var errorHandler = require('./misc/error-handler');
 app.use(errorHandler.pageNotFound);
 app.use(errorHandler.log);
 app.use(errorHandler.page);

@@ -1,9 +1,9 @@
 <div class="subpage-container center-aligned">
 	<h3 class="subpage-title">
-		<span class="ex-smaller">Settings for </span>&lt;{{user.username}}&gt;
+		<span class="ex-smaller">Settings for </span><a href="/user/{{user.id}}">&lt;{{user.username}}&gt;</a>
 	</h3>
 	<hr class="dashed" />
-	<form class="pure-form pure-form-stacked" method="post" action="/user/{{user.id}}/reset_passwd">
+	<form class="pure-form pure-form-stacked" method="post" action="/user/{{user.id}}/settings">
 		<fieldset>
 		<label for="ctl-email">Email</label>
 		<input name="email" id="ctl-email" readonly value="{{user.email}}" class="login-input pure-input-rounded">

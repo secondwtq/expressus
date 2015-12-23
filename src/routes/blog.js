@@ -13,6 +13,7 @@ var xss = require('xss-filters');
 
 var marked = require('marked');
 var markdown = require('../misc/markdown');
+var model = require('../model/model');
 
 router.use(function (req, res, next) {
 	var logged_in_class = function () {
@@ -68,13 +69,17 @@ router.get('/article', (req, res, next) =>
 	)
 );
 
-router.get('/article/post', user.authed, user.req_privilege('post_article'),
+router.get('/article/post',
+    model.Auth.Middleware.authed,
+    model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
 	(req, res, next) => res.render('blog_post',
 		_.extend(convertUserDescToIndexUserDesc(req.user),
 			{ 'title_': 'Post Article' }))
 );
 	
-router.get('/article/draft', user.authed, user.req_privilege('post_article'),
+router.get('/article/draft',
+    model.Auth.Middleware.authed,
+    model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
 	function (req, res, next) {
 		Promise.all([
 			exusdb.db().oneOrNone('SELECT * FROM "stakeholder" WHERE id = $1', [ req.user.id ]),
@@ -89,7 +94,9 @@ router.get('/article/draft', user.authed, user.req_privilege('post_article'),
 		.catch((err) => next(_.statusopt(err)));
 	});
 
-router.get('/article/:id/delete', user.authed, function (req, res, next) {
+router.get('/article/:id/delete',
+    model.Auth.Middleware.authed,
+    function (req, res, next) {
 	var id = parseInt(req.params['id']);
 	res.render('blog_confirm_delete', {
 		'layout': 'subpage', 'id': id,
@@ -102,7 +109,8 @@ router.get('/article/:id/delete', user.authed, function (req, res, next) {
 	});
 });
 
-router.post('/article/:id/delete', user.authed, function (req, res, next) {
+router.post('/article/:id/delete', model.Auth.Middleware.authed,
+    function (req, res, next) {
 	var id = parseInt(req.params['id']);
 	if (req.body['confirmed'] != 'on') {
 		res.render('blog_confirm_delete', {
@@ -122,7 +130,8 @@ router.post('/article/:id/delete', user.authed, function (req, res, next) {
 	}
 });
 
-router.get('/article/:id/draft', user.authed, function (req, res, next) {
+router.get('/article/:id/draft', model.Auth.Middleware.authed,
+    function (req, res, next) {
 	var id = parseInt(req.params['id']);
 	exusdb.db().oneOrNone('SELECT * from "article_draft" WHERE id = $1 AND author_id = $2', [ id, req.user['id'] ])
 	.then((data) => (data === null) ? 
@@ -143,7 +152,8 @@ router.get('/article/:id/draft', user.authed, function (req, res, next) {
 	).catch((err) => console.log(err));
 });
 
-router.post('/article/:id/draft', user.authed, function (req, res, next) {
+router.post('/article/:id/draft', model.Auth.Middleware.authed,
+    function (req, res, next) {
 	var id = parseInt(req.params['id']);
 	exusdb.db().tx(function (t) {
 		return t.oneOrNone('UPDATE "article" SET title = $3, subtitle = $4, summary = $5 WHERE id = $1 AND author_id = $2 \
@@ -158,7 +168,9 @@ router.post('/article/:id/draft', user.authed, function (req, res, next) {
 	.catch((err) => next(_.statusopt(err)));
 });
 
-router.post('/article/:id/postdraft', user.authed, user.req_privilege('post_article'),
+router.post('/article/:id/postdraft', 
+    model.Auth.Middleware.authed,
+    model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
 	function (req, res, next) {
 		var id = parseInt(req.params['id']);
 		exusdb.db().tx(function (t) {
@@ -187,7 +199,9 @@ router.post('/article/:id/postdraft', user.authed, user.req_privilege('post_arti
 		.catch((err) => console.log(err));
 	});
 
-router.post('/article/draft', user.authed, user.req_privilege('post_article'),
+router.post('/article/draft',
+    model.Auth.Middleware.authed,
+    model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
 	function (req, res, next) {
 		exusdb.db().tx((t) =>
 			t.oneOrNone('INSERT INTO "article" (author_id, post_date, title, subtitle,\
@@ -202,7 +216,10 @@ router.post('/article/draft', user.authed, user.req_privilege('post_article'),
 	});
 
 // post article - direct
-router.post('/article/post', user.authed, user.req_privilege('post_article'), function (req, res, next) {
+router.post('/article/post',
+    model.Auth.Middleware.authed,
+    model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
+    function (req, res, next) {
 	exusdb.db().tx((t) =>
 		t.one('INSERT INTO "article" (author_id, post_date, title, subtitle, summary) \
 			VALUES ($1, $2, $3, $4, $5) RETURNING id', 
@@ -248,7 +265,7 @@ router.get('/article/:id', function (req, res, next) {
 });
 
 // POST paragraph comment
-router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed, function (req, res, next) {
+router.post('/article/:article_id/paragraph/:paragraph_id/comment', model.Auth.Middleware.authed, function (req, res, next) {
 	marked.setOptions(config['comment']);
 	var parid = parseInt(req.params.paragraph_id);
 	var content = req.body['use_markdown'] ? 
@@ -261,7 +278,7 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', user.authed,
 });
 
 // POST article comment
-router.post('/article/:article_id/comment', user.authed, function (req, res, next) {
+router.post('/article/:article_id/comment', model.Auth.Middleware.authed, function (req, res, next) {
 	marked.setOptions(config['comment']);
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 
