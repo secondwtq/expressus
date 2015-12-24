@@ -52,7 +52,7 @@ export function markAndSplitAsync_(source: string,
 
 export function markAndSplitAsync(source: string,
         mconfig: string | MarkedOptions | SplitCallback,
-        callback: SplitCallback): Promise<SplitResult> | void {
+        callback?: SplitCallback): Promise<SplitResult> | void {
 	if (typeof mconfig === 'function') {
         callback = <SplitCallback>mconfig;
         mconfig = undefined;

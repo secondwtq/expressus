@@ -4,6 +4,7 @@ import * as config from './config';
 
 import * as pgplib from 'pg-promise';
 import * as monitor from 'pg-monitor';
+import * as RSS from 'rss';
 
 var connection: PgPromise.Database = undefined;
 var options = { };

@@ -82,61 +82,65 @@ router.post('/register',
         })
 );
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id',
+async function (req, res, next) {
     req.params['id'] = parseInt(req.params['id']);
-    db().one<Model.User>('SELECT * FROM stakeholder WHERE id=$1', [ req.params['id'] ])
-        .then((user) =>
-            res.render('user_info', {
-                layout: 'subpage',
-                user,
-                'display_settings': Auth.canUserModifySettingOf(req.user, req.params['id']),
-                'title_': `User ${user.username}`
-            })
-        , (err) => next(emit404('user not found')));
+    var user = await db().oneOrNone<Model.User>('SELECT * FROM stakeholder WHERE id=$1',
+        [ req.params['id'] ]);
+    if (user === null) {
+        return next(emit404('user not found')); }
+    res.render('user_info', {
+        layout: 'subpage',
+        user,
+        'display_settings': Auth.canUserModifySettingOf(req.user, req.params['id']),
+        'title_': `User ${user.username}`
+    });
 });
 
 router.get('/:id/settings',
     Auth.Middleware.authed,
     canCurrentUserModifySetting,
-    (req, res, next) =>
-        db().one<Model.User>('SELECT * FROM stakeholder WHERE id=$1',
-            [ req.params['id'] ])
-        .then((user) =>
-            res.render('user_settings', {
-                layout: 'subpage',
-                user,
-                'title_': `Settings of ${user.username}`
-            })
-        , (err) => next(emit404('user not found')))
+    async function (req, res, next) {
+        var user = await db().oneOrNone<Model.User>(
+            'SELECT * FROM stakeholder WHERE id=$1',
+            [ req.params['id'] ]);
+        if (user === null) {
+            return next(emit404('user not found')); }
+        res.render('user_settings', {
+            layout: 'subpage',
+            user,
+            'title_': `Settings of ${user.username}`
+        });
+    }
 );
 
 router.post('/:id/settings', 
     Auth.Middleware.authed,
     canCurrentUserModifySetting,
-    (req, res, next) =>
-        db().none('UPDATE stakeholder SET displayname=$2, title=$3, showemail=$4 WHERE id=$1', 
-            [ req.params['id'], req.body.displayname, req.body.title, req.body['publicemail'] || false ])
-        .then(function (data) {
-            res.redirect(`/user/${req.params['id']}/settings`);
-        }, (reason) => dbError.notFound(reason) ?
-            next(emit404('user not found'))
-            :
-            next(emit500())
-        )
+    async function (req, res, next) {
+        var id = await db().oneOrNone('UPDATE stakeholder SET displayname=$2, title=$3, showemail=$4 WHERE id=$1 RETURNING id', 
+            [ req.params['id'], req.body.displayname,
+            req.body.title, req.body['publicemail'] || false ]);
+        if (id === null) {
+            return next(emit404('user not found')) }
+        res.redirect(`/user/${req.params['id']}`);
+    }
 );
 
 router.get('/:id/reset_passwd',
     Auth.Middleware.authed,
     canCurrentUserModifySetting,
-    (req, res, next) =>
-        db().oneOrNone('SELECT * FROM stakeholder WHERE id=$1',
-            [ req.params['id'] ])
-        .then((user) =>
-            res.render('user_resetpasswd', {
-                layout: 'subpage', user,
-                'redirecturl': req.query['redirecturl']
-            })
-        , () => next(emit404('user not found')))
+    async function (req, res, next) {
+        var user = await db().oneOrNone<Model.User>(
+            'SELECT * FROM stakeholder WHERE id=$1',
+            [ req.params['id'] ]);
+        if (user === null) {
+            return next(emit404('user not found')); }
+        res.render('user_resetpasswd', {
+            layout: 'subpage', user,
+            'redirecturl': req.query['redirecturl']
+        });
+    }
 );
 
 router.post('/:id/reset_passwd',

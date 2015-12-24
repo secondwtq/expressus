@@ -18,6 +18,10 @@ export module Model {
         showemail: boolean;
     }
     
+    export interface Article {
+        
+    }
+    
 }
 
 export namespace Auth {
@@ -41,7 +45,7 @@ export namespace Auth {
     export function canUserModifySettingOf(
             user: Model.User, target_id: number): boolean {
         if (!user) { return false; }
-        return user.id === target_id;
+        return user.id === target_id || hasPrivilege(user, Privilege.ALL_USER_UPDATE);
     }
     
     export function redirectURLForRequest (req: Request) {
@@ -74,8 +78,7 @@ export namespace Auth {
             } else {
                 next();
             }
-        } 
-            
+        }
     }
     
 }

@@ -11,3 +11,4 @@
 /// <reference path="../typings/sprintf-js/sprintf-js.d.ts" />
 /// <reference path="../typings/pg-promise/pg-promise.d.ts" />
 /// <reference path="../typings/pg-monitor/pg-monitor.d.ts" />
+/// <reference path="../typings/rss/rss.d.ts" />
