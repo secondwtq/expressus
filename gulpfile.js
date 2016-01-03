@@ -25,6 +25,14 @@ function buildServerTS(isDist) {
     return r;
 }
 
+var tsConfigTest = tsb.create('test/tsconfig.json');
+function buildTestTS(isDist) {
+    var r = src([ 'typings/**/*.ts', 'test/**/*.ts' ])
+            .pipe(tsConfigTest())
+            .pipe(gulp.dest('test'));
+    return r;
+}
+
 function buildJS(isDist) {
     var r = src('./src/static/js/*.js')
     if (isDist) {
@@ -44,11 +52,12 @@ gulp.task('build-js', buildJS.bind(null, false));
 gulp.task('build-js:dist', buildJS.bind(null, true));
 
 gulp.task('build-ts-server', buildServerTS.bind(null, false));
+gulp.task('build-ts-test', buildTestTS.bind(null, false));
 
 gulp.task('build',
-    [ 'build-js', 'build-css', 'build-ts-server' ]);
+    [ 'build-js', 'build-css', 'build-ts-server', 'build-ts-test' ]);
 gulp.task('build-dist', 
-    [ 'build-js:dist', 'build-css:dist', 'build-ts-server' ]);
+    [ 'build-js:dist', 'build-css:dist', 'build-ts-server', 'build-ts-test' ]);
 
 gulp.task('watch', function () {
     gulp.watch('./src/static/less/*.less', [ 'build-css' ]);
