@@ -44,9 +44,8 @@ export function searchFileAsync(filename: string,
 	});
 }
 
-export function searchAndReadFile(filename: string,
+export async function searchAndReadFile(filename: string,
         options, paths: string[]): Promise<string> {
-	return searchFileAsync(filename, paths)
-	.then((filename) => readFileAsync(filename, options),
-		(err) => Promise.reject(err));
+    var filename_ = await searchFileAsync(filename, paths);
+    return readFileAsync(filename_, options);
 }

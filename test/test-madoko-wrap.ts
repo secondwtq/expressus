@@ -12,11 +12,16 @@ var opt = {
     }
 };
 
-console.log('started!');
-fsw.readFileAsync('./t.mdk', { 'encoding': 'utf8' })
-.then((data) => mdw.transpile(data, opt))
-.then((data) => 
-	fsw.writeFileAsync('t.html', data)
-	.then(() => console.log('completed!'))
-)
-.catch((err) => console.log(err));
+async function test() {
+    try {
+        console.log('started!');
+        var mdksrc = await fsw.readFileAsync('./t.mdk', { 'encoding': 'utf8' });
+        var html = await mdw.transpile(mdksrc, opt);
+        await fsw.writeFileAsync('t.html', html);
+        console.log('completed!');
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+test();

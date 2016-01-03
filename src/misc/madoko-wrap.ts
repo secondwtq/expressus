@@ -59,12 +59,11 @@ function registerColorizers(src: string, paths: string[], extralangs: string[]) 
 }
 
 var prelude_cache = undefined;
-function getPreludeContent(): Promise<string> {
+async function getPreludeContent(): Promise<string> {
 	if (prelude_cache === undefined) {
-		return fsw.readFileAsync(
-            mdFile('styles/prelude.mdk'),
-			{ 'encoding': 'utf-8' })
-		.then((data) => Promise.resolve(prelude_cache = data));
+        var data = await fsw.readFileAsync(
+            mdFile('styles/prelude.mdk'), { 'encoding': 'utf-8' });
+        return Promise.resolve(prelude_cache = data);
 	} else { return Promise.resolve(prelude_cache); }
 }
 
@@ -76,18 +75,10 @@ export interface TranspileOptions {
 }
 
 import * as _ from 'lodash';
-export function transpile(src: string, options: TranspileOptions) {
+export async function transpile(src: string, options: TranspileOptions) {
     var mopt = _.merge(madoko.initialOptions(), options.madokoOption || { });
-	return getPreludeContent()
-	.then((prelude) => {
-		src = `${prelude}\n${src}`;
-		return Promise.all<any>([
-			Promise.resolve(src),
-			registerColorizers(src,
-                [ mdFile('styles/lang') ],
-                options.extraLanguage || [ ]
-            )
-		])
-	})
-	.then((results) => Promise.resolve(madoko.markdown(results[0], mopt)));
+    src = `${await getPreludeContent()}\n${src}`;
+    await registerColorizers(src, [ mdFile('styles/lang') ],
+        options.extraLanguage || [ ]);
+	return Promise.resolve(madoko.markdown(src, mopt));
 }
