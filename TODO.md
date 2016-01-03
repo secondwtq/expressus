@@ -27,3 +27,5 @@
 * OAuth2 integration - GitHub, Twitter (passport?)
 
 * Syntax highlighting (with language name output)
+
+* Emoji support (with gemoji maybe)

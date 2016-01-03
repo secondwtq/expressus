@@ -7,6 +7,10 @@
 			<input type="text" name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
 			<input type="password" autofocus name="passwd" placeholder="Password" class="login-input">
 			{{/if}}
+            {{#ifeq last_username ""}}
+            <input type="text" autofocus name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
+			<input type="password" name="passwd" placeholder="Password" class="login-input">
+            {{/ifeq}}
 			{{^last_username}}
 			<input type="text" autofocus name="username" placeholder="Username" class="login-input" {{#failed}}value="{{last_username}}"{{/failed}}>
 			<input type="password" name="passwd" placeholder="Password" class="login-input">
