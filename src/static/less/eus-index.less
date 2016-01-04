@@ -1,5 +1,6 @@
 
 @import "prefixer.less";
+@import "eus-define.less";
 
 #author-summary {
 	#author-displayname { color: #eee; }
@@ -29,6 +30,23 @@
 			clear: both;
 		}
 	}
+}
+
+.recent-comments {
+    ul {
+        text-align: center;
+        font-size: 0.9rem;
+        list-style: none;
+        padding: 0;
+        li {
+            text-align: left;
+            max-width: 240px;
+            display: inline-block;
+            padding: 0.8em 0;
+            .text { margin-top: 0.3em; }
+            border-top: 1px dotted @lint-10;
+        }
+    }
 }
 
 .top-nav, #user-meta {

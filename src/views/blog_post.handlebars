@@ -96,17 +96,21 @@
 </div>
 {{> ref_dollar}}
 <script>
+    
 	document.addEventListener("DOMContentLoaded", function () {
 		
 		function setLoadingViewStatus(cls) {
 			document.getElementsByClassName('postp-loading')[0].className = "postp-loading " + cls;
 		}
-		
-		document.getElementsByClassName('postp-trclose')[0].addEventListener("click", function () {
-			setLoadingViewStatus("");
-			document.querySelector('.postp-cont').classList.remove('show');
+        
+        function postpClose() {
+            setLoadingViewStatus("");
+			document.getElementsByClassName('postp-cont')[0].classList.remove('show');
 			document.getElementsByClassName('postp-content')[0].innerHTML = "";
-		});
+        }
+		
+		document.getElementsByClassName('postp-trclose')[0].addEventListener("click", postpClose);
+        document.getElementsByClassName('postp-cont')[0].addEventListener('click', postpClose);
 		
 		document.getElementById('btn-preview').addEventListener("click", function () {
 			document.getElementsByClassName('postp-cont')[0].classList.add('show');

@@ -14,8 +14,6 @@
 
 * External Links.
 
-* Picture Upload.
-
 * Paging and archives.
 
 * Article Preview.
@@ -24,8 +22,12 @@
 
 * Markdown Styling.
 
-* OAuth2 integration - GitHub, Twitter (passport?)
-
 * Syntax highlighting (with language name output)
 
 * Emoji support (with gemoji maybe)
+
+* Date problems
+
+* Picture Upload.
+
+* OAuth2 integration - GitHub, Twitter (passport?)

@@ -16,6 +16,8 @@ var markdown = require('../misc/markdown');
 var model = require('../model/model');
 var format = require('../misc/format-ext');
 
+var $ = require('cheerio');
+
 router.use(function (req, res, next) {
 	var logged_in_class = function () {
 		if (req.user === undefined) { return 'has-not-logged-in'; }
@@ -53,22 +55,37 @@ function convertUserDescToIndexUserDesc(src) {
 	};
 }
 
+function getRecentComments(req, res, next) {
+    exusdb.db().manyOrNone('SELECT article_id, commenter_id, username, comment_date, content, title FROM "comment_detail" \
+        JOIN "article" ON comment_detail.article_id = article.id WHERE indraft = FALSE \
+        AND trashed = FALSE ORDER BY comment_date DESC LIMIT $1', [ 6 ])
+    .then(function (results) {
+        results.forEach((comment) =>
+            comment['content'] = $.load(comment['content']).root().text());
+        res['recent_comments'] = results;
+        next();
+    });
+}
+
 router.get('/', (req, res, next) =>
 	res.redirect('/blog/article'));
 
-router.get('/article', (req, res, next) =>
-	exusdb.db().any('SELECT * FROM "article_detail" \
-					WHERE NOT trashed AND NOT indraft \
-					ORDER BY post_date DESC')
-	.then((data) =>
-		res.render('blog_index', {
-			'title_': 'Articles',
-			'articles': data,
-			'show_license': true
-		}),
-	(reason) => next(_.status(reason, 500))
-	)
-);
+router.get('/article',
+    getRecentComments, 
+    (req, res, next) =>
+        exusdb.db().any('SELECT * FROM "article_detail" \
+                        WHERE NOT trashed AND NOT indraft \
+                        ORDER BY post_date DESC')
+        .then((data) =>
+            res.render('blog_index', {
+                'title_': 'Articles',
+                'articles': data,
+                'show_license': true,
+                'recent_comments': res['recent_comments']
+            }),
+        (reason) => next(_.status(reason, 500))
+        )
+    );
 
 router.get('/article/post',
     model.Auth.Middleware.authed,

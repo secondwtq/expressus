@@ -22,6 +22,25 @@
 				<a href="https://github.com/secondwtq"><i class="fa fa-lg fa-github"></i></a>
 				<a href="/feed"><i class="fa fa-lg fa-rss"></i></a>
 			</div>
+            
+            
+        {{#if recent_comments}}
+            <hr class="dashed" />
+            <div class="recent-comments">
+                <h3>Recent Comments</h3>
+                <ul>
+                {{#recent_comments}}
+                    <li>
+                        {{article_datefmt comment_date}} - 
+                        <a href="/user/{{commenter_id}}">{{username}}</a> under
+                        <a href="/blog/article/{{article_id}}">{{title}}</a>:
+                        <div class="text">{{content}}</div>
+                    </li>
+                {{/recent_comments}}
+                </ul>
+            </div>
+        {{/if}}
+        
 		</div>
 	</div>
 	
