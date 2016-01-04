@@ -44,13 +44,14 @@
 				<textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
 				<hr class="dashed" />
                 
+                <div class="create-date">Created in: {{article_datefmt create_date}}</div>
                 <div class="tbar-format">
                     <span class="tbar-title">Select a format: </span>
-                    <input type="radio" id="format-madoko" name="format" value="madoko" checked>
-                    <label for="format-madoko">Madoko</label>
-                    <input type="radio" id="format-markdown" name="format" value="markdown">
+                    <input type="radio" id="format-markdown" name="format" value="markdown" {{radio format "markdown"}}>
                     <label for="format-markdown">Markdown</label>
-                    <input type="radio" id="format-plaintext" name="format" value="plaintext">
+                    <input type="radio" id="format-madoko" name="format" value="madoko" {{radio format "madoko"}}>
+                    <label for="format-madoko">Madoko</label>
+                    <input type="radio" id="format-plaintext" name="format" value="plaintext" {{radio format "plaintext"}}>
                     <label for="format-plaintext">Plain Text</label>
                 </div>
                 
@@ -136,11 +137,13 @@
 			xhr.onerror = function () {
 				error();
 			};
+            // FormData cannot be converted to JSON, FML
 			xhr.send(JSON.stringify({
 				'title': document.querySelector('[name="title"]').value,
 				'subtitle': document.querySelector('[name="subtitle"]').value,
 				'summary': document.querySelector('[name="summary"]').value,
-				'content': document.querySelector('[name="content"]').value
+				'content': document.querySelector('[name="content"]').value,
+                'format': document.querySelector('[name="format"]:checked').value
 			}));
 		});
 	});

@@ -14,6 +14,7 @@ var xss = require('xss-filters');
 var marked = require('marked');
 var markdown = require('../misc/markdown');
 var model = require('../model/model');
+var format = require('../misc/format-ext');
 
 router.use(function (req, res, next) {
 	var logged_in_class = function () {
@@ -74,7 +75,12 @@ router.get('/article/post',
     model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
 	(req, res, next) => res.render('blog_post',
 		_.extend(convertUserDescToIndexUserDesc(req.user),
-			{ 'title_': 'Post Article' }))
+			{
+                'title_': 'Post Article',
+                'format': 'madoko'
+            }
+        )
+    )
 );
 	
 router.get('/article/draft',
@@ -146,12 +152,15 @@ router.get('/article/:id/draft', model.Auth.Middleware.authed,
 				'title': data['title'],
 				'subtitle': data['subtitle'],
 				'summary': data['summary'],
-				'content': data['content']
+				'content': data['content'],
+                'format': data['format'],
+                'create_date': data['create_date']
 			})
 		)
 	).catch((err) => console.log(err));
 });
 
+// UPDATE A DRAFT
 router.post('/article/:id/draft', model.Auth.Middleware.authed,
     function (req, res, next) {
 	var id = parseInt(req.params['id']);
@@ -161,13 +170,15 @@ router.post('/article/:id/draft', model.Auth.Middleware.authed,
 		.then(function (id) {
 			if (id === null) {
 				return next(_.throw(404, 'no such entry or invalid user')); }
-			return t.none('UPDATE "draft" SET content = $2 WHERE article_id = $1', [ parseInt(id['id']), req.body['content'] ]);
+			return t.none('UPDATE "draft" SET content = $2, format = $3 WHERE article_id = $1',
+                [ parseInt(id['id']), req.body['content'], req.body['format'] ]);
 		});
 	})
 	.then(() => res.redirect('/blog/article/draft'))
 	.catch((err) => next(_.statusopt(err)));
 });
 
+// post a draft to article
 router.post('/article/:id/postdraft', 
     model.Auth.Middleware.authed,
     model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
@@ -178,27 +189,28 @@ router.post('/article/:id/postdraft',
 				.then((article) => (article === null) ? 
 					next(_.throw(404, 'no such entry or invalid user'))
 					:
-					markdown.markAndSplitAsync(req.body['content'], 'article')
+					format.splitAsyncForFormat(req.body['format'])(req.body['content'], 'article')
 					.then((paras) =>
 						t.batch(_.map(paras, (para) =>
-							t.none('INSERT INTO "paragraph"(article_id, content) VALUES ($1, $2)', [ id, para ])
+							t.none('INSERT INTO "paragraph" (article_id, content) VALUES ($1, $2)', [ id, para ])
 						))
 					).catch((err) => _.throw(400, err.toString()))
 				)
 				// update the draft too so we can recover
 				//	 the Markdown (or sth.) content later
 				.then(() => 
-					t.none('UPDATE "draft" SET content = $2 WHERE article_id = $1',
-						[ id, req.body['content'] ]))
+					t.none('UPDATE "draft" SET content = $2, format = $3 WHERE article_id = $1',
+						[ id, req.body['content'], req.body['format'] ]))
 				.then(() =>
-					t.oneOrNone('UPDATE "article" SET title = $3, subtitle = $4, summary = $5, indraft = FALSE \
+					t.oneOrNone('UPDATE "article" SET title = $3, subtitle = $4, summary = $5, indraft = FALSE, post_date = $6 \
 								WHERE id = $1 AND author_id = $2 RETURNING id',
-					[ id, req.user['id'], req.body['title'], req.body['subtitle'], req.body['summary'] ])
+					[ id, req.user['id'], req.body['title'], req.body['subtitle'], req.body['summary'], new Date() ])
 				).catch((err) => console.log(err));
 		}).then((id) => res.redirect(`/blog/article/${id['id']}`))
 		.catch((err) => console.log(err));
 	});
 
+// create draft
 router.post('/article/draft',
     model.Auth.Middleware.authed,
     model.Auth.Middleware.requirePrivilege(model.Auth.Privilege.POST_ARTICLE),
@@ -208,8 +220,9 @@ router.post('/article/draft',
 				summary, indraft) VALUES ($1, $2, $3, $4, $5, TRUE) RETURNING id',
 				[ req.user['id'], new Date(), req.body['title'], req.body['subtitle'], req.body['summary'] ]
 			)
-			.then((id) => t.oneOrNone('INSERT INTO "draft" (article_id, content) \
-				VALUES ($1, $2) RETURNING article_id', [ id['id'], req.body['content'] ])
+			.then((id) => t.oneOrNone('INSERT INTO "draft" (article_id, content, format, create_date) \
+				VALUES ($1, $2, $3, $4) RETURNING article_id',
+                [ id['id'], req.body['content'], req.body['format'], new Date() ])
 			)
 		).then((id) => res.redirect(`/blog/article/draft`))
 		.catch((err) => console.log(err));
@@ -226,11 +239,13 @@ router.post('/article/post',
 			[ req.user['id'], new Date(), req.body['title'], req.body['subtitle'], req.body['summary'] ])
 		.then((id_) => {
 			var id = parseInt(id_['id']);
-			markdown.markAndSplitAsync(req.body['content'], 'article')
-			.then((paras) =>
+            format.splitAsyncForFormat(req.body['format'])(req.body['content'], 'article')
+			.then((paras) => {
+                if (!paras.length) { throw new Error('no content in this post'); }
 				t.batch(_.map(paras, (para) =>
-					t.none('INSERT INTO "paragraph"(article_id, content) VALUES ($1, $2)', [ id, para ])
+					t.none('INSERT INTO "paragraph" (article_id, content) VALUES ($1, $2)', [ id, para ])
 				))
+            }
 			).catch((err) => _.throw(400, err.toString()));
 			return Promise.resolve(id);
 		})

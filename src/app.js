@@ -73,7 +73,10 @@ var hbs = exphbs.create({
 				"/": lvalue / rvalue,
 				"%": lvalue % rvalue
 			} [operator];
-		}
+		},
+        // stackoverflow.com/questions/26066768/how-to-set-the-selected-item-in-a-radio-button-group-in-handlebars-template
+        "radio": (value, currentValue) =>
+            (value === currentValue) ? 'checked' : ''
 	}
 });
 
