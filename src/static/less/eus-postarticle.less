@@ -4,8 +4,6 @@
 
 #form-post {
 	
-	font-size: 0.8em;
-	
 	input, textarea {
 		width: 100%;
 		background-color: @lint-20;
@@ -32,6 +30,40 @@
 			bottom: 0 !important;
 		}
 	}
+    
+    .tbar-format {
+        text-align: right;
+        padding-bottom: 0.3rem;
+        // to eliminate the space
+        font-size: 0;
+        @media @mobile-small {
+			text-align: center; }
+        .tbar-title {
+            font-size: 0.9rem;
+            color: lightgray;
+            @media @mobile-small {
+				display: block; }
+        }
+        input[type="radio"] {
+            display: none;
+            &:checked + label {
+                background-color: #ccc;
+                text-shadow: gray 0 1px 2px;
+            }
+        }
+        label {
+            text-align: center;
+            min-width: 7rem;
+            font-size: 1rem;
+            margin-right: -1px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 0.4rem 0;
+            text-shadow: transparent 0 0 2px;
+            .transition(all 0.1s ease-in-out);
+            .user-select(none);
+        }
+    }
 }
 
 .postp-cont {

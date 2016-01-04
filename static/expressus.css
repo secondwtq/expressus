@@ -71,7 +71,7 @@ a.anchor-sp:hover { color: white; }
 }
 
 #center-container-inner {
-	max-width: 48em;
+	max-width: 720px;
 	margin: 0 auto;
 }
 
@@ -150,7 +150,7 @@ a.anchor-sp:hover { color: white; }
 	max-height: 32px;
 }
 
-#user-meta.has-not-logged-in { padding: 2em; }
+#user-meta.has-not-logged-in { padding: 2rem; }
 
 .has-logged-in .not-logged-in { display: none; }
 .has-not-logged-in .logged-in { display: none; }
@@ -174,10 +174,6 @@ a.anchor-sp:hover { color: white; }
 	border-radius: 50%;
 	background-color: lightslategray;
 	box-shadow: 0 3px 6px dimgray;
-}
-
-#center-container #articles {
-	margin-right: 1.5em;
 }
 
 .no-article {
@@ -211,7 +207,6 @@ a.anchor-sp:hover { color: white; }
 
 .article-index .article-summary,
 .article-paragraphs {
-	font-size: 0.8em;
 	line-height: 1.6em;
 	color: lightgray;
 }
@@ -369,7 +364,6 @@ a.anchor-sp:hover { color: white; }
 	background-color: #73787e;
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 	color: white;
-	font-size: small;
 	min-height: 10em;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
@@ -387,7 +381,6 @@ a.anchor-sp:hover { color: white; }
 }
 
 .comment-form-frame .pure-button {
-	font-size: small;
 	background-color: rgba(0, 0, 0, 0.03);
 	color: lightgray;
 }
@@ -428,16 +421,13 @@ a.anchor-sp:hover { color: white; }
 .article-paragraph-comment-usercard img {
 	margin: 0 !important; }
 
-.article-comment-usercard .usercard-username {
-	font-size: small; }
+.article-comment-usercard .usercard-username { font-size: 0.8rem; }
 	
 .article-paragraph-comment-usercard .usercard-username {
 	font-size: xx-small; }
 
 .article-comment-content {
-	color: lightgray;
-	font-size: small;
-}
+	color: lightgray; }
 
 .article-comment .article-date,
 .article-paragraph-comment .article-date {
@@ -509,7 +499,6 @@ a.anchor-sp:hover { color: white; }
 }
 
 .checkbox-switch-md {
-	font-size: small;
 	color: lightgray;
 	padding: 0.15em;
 }

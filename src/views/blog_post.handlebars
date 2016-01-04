@@ -25,13 +25,13 @@
 		
 		<div id="center-container-inner">
 			
-			<h3 class="center-aligned">
+			<h2 class="center-aligned">
 				{{#if indraft}}
 				Edit a Draft
 				{{else}}
 				Post an Article
 				{{/if}}
-			</h3>
+			</h2>
 			<hr class="dashed" />
 			
 			<form id="form-post" class="pure-form pure-form-stacked" method="POST" action="/blog/article/post">
@@ -43,6 +43,17 @@
 				<hr class="dashed" />
 				<textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
 				<hr class="dashed" />
+                
+                <div class="tbar-format">
+                    <span class="tbar-title">Select a format: </span>
+                    <input type="radio" id="format-madoko" name="format" value="madoko" checked>
+                    <label for="format-madoko">Madoko</label>
+                    <input type="radio" id="format-markdown" name="format" value="markdown">
+                    <label for="format-markdown">Markdown</label>
+                    <input type="radio" id="format-plaintext" name="format" value="plaintext">
+                    <label for="format-plaintext">Plain Text</label>
+                </div>
+                
 				<button class="pure-button" id="btn-preview" type="button">Preview</button>
 				{{#if indraft}}
 				<button class="pure-button" formaction="/blog/article/{{id}}/draft">Save to Draft</button>
