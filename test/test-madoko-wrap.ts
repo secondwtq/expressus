@@ -20,7 +20,7 @@ async function test() {
         await fsw.writeFileAsync('t.html', html);
         console.log('completed!');
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 }
 
