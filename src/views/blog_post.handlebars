@@ -36,17 +36,22 @@
 			
 			<form id="form-post" class="pure-form pure-form-stacked" method="POST" action="/blog/article/post">
 				<fieldset class="pure-group" id="titleset">
-					<input type="text" autofocus name="title" placeholder="Title" class="pure-u-4-5" value="{{title}}">
+					<input type="text" autofocus id="posttitle" name="title" placeholder="Title" class="pure-u-4-5" value="{{title}}">
 					<input type="text" name="subtitle" placeholder="Subtitle" class="pure-u-4-5" value="{{subtitle}}">
 					<textarea id="postsummary" name="summary" placeholder="Summary">{{summary}}</textarea>
 				</fieldset>
 				<hr class="dashed" />
-				<textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
+                <!-- component: maximizable editarea -->
+                <div class="eg-editmax">
+                    <button type="button" class="eg-editmax-max"><i class="material-icons md-16">launch</i></button>
+                    <textarea id="postarea" name="content" placeholder="Content">{{content}}</textarea>
+                </div>
 				<hr class="dashed" />
                 
-                <div class="create-date">Created in: {{article_datefmt create_date}}</div>
+                <div class="eg-metatext eg-minipad4">Created in: {{article_datefmt create_date}}</div>
+                <!-- component: radio select box -->
                 <div class="tbar-format">
-                    <span class="tbar-title">Select a format: </span>
+                    <span class="eg-metatext tbar-title">Select a format: </span>
                     <input type="radio" id="format-markdown" name="format" value="markdown" {{radio format "markdown"}}>
                     <label for="format-markdown">Markdown</label>
                     <input type="radio" id="format-madoko" name="format" value="madoko" {{radio format "madoko"}}>
@@ -55,17 +60,17 @@
                     <label for="format-plaintext">Plain Text</label>
                 </div>
                 
-				<button class="pure-button" id="btn-preview" type="button">Preview</button>
-				{{#if indraft}}
-				<button class="pure-button" formaction="/blog/article/{{id}}/draft">Save to Draft</button>
+				<button class="pure-button btn-preview" type="button">Preview</button>
+            {{#if indraft}}
+				<button class="pure-button" formaction="/blog/article/{{id}}/draft" id="btn-save-to-draft">Save to Draft</button>
 				<button type="submit" class="pure-button" formaction="/blog/article/{{id}}/postdraft">Post</button>
 				<a href="/blog/article/{{id}}/delete?redirecturl=/blog/article/draft&backurl=/blog/article/{{id}}/draft">
 					<button type="button" class="pure-button">Delete</button>
 				</a>
-				{{else}}
-				<button class="pure-button" formaction="/blog/article/draft">Save to Draft</button>
+            {{else}}
+				<button class="pure-button" formaction="/blog/article/draft" id="btn-save-to-draft">Save to Draft</button>
 				<button type="submit" class="pure-button" formaction="/blog/article/post">Post</button>
-				{{/if}}
+            {{/if}}
 				<br/>
 			</form>
 		</div>
@@ -73,6 +78,25 @@
 	
 </div>
 
+<div class="eg-editmax-dialog-cont">
+    <div class="eg-editmax-dialog">
+        <div class="eg-editmax-tr">
+            <a class="eg-editmax-trspan eg-editmax-trbtn eg-editmax-trclose">
+                <i class="material-icons md-16 md-icon-custom">close</i>
+            </a>
+            <input class="eg-editmax-trspan eg-editmax-trtitle">
+        </div>
+        <div class="eg-editmax-content">
+            <textarea class="eg-editmax-editarea"></textarea>
+        </div>
+    </div>
+    <div class="eg-bottombar hide">
+        <button class="eg-bottombar-btn btn-preview">Preview</button>
+        <button class="eg-bottombar-btn btn-save-to-draft">Save to Draft</button>
+    </div>
+</div>
+
+<!-- component: large modal dialog -->
 <div class="postp-cont">
 	<div class="postp-dialog">
 		<div class="postp-tr">
@@ -99,12 +123,49 @@
     
 	document.addEventListener("DOMContentLoaded", function () {
 		
-		function setLoadingViewStatus(cls) {
+        document.getElementsByClassName('eg-editmax-max')[0].addEventListener('click', editmaxOpen);
+        document.getElementsByClassName('eg-editmax-trclose')[0].addEventListener('click', editmaxClose);
+        function editmaxOpen() {
+            document.getElementsByClassName('eg-editmax-dialog-cont')[0].classList.add('show');
+            document.getElementsByClassName('eg-editmax-dialog-cont')[0].getElementsByClassName('eg-bottombar')[0].classList.remove('hide');
+            document.body.classList.add('eg-noscroll');
+            editmaxSync(true);
+        }
+        function editmaxClose() {
+            document.getElementsByClassName('eg-editmax-dialog-cont')[0].classList.remove('show');
+            document.getElementsByClassName('eg-editmax-dialog-cont')[0].getElementsByClassName('eg-bottombar')[0].classList.add('hide');
+            document.body.classList.remove('eg-noscroll');
+            editmaxSync();
+        }
+        
+        document.getElementsByClassName('eg-editmax-editarea')[0].
+            addEventListener('input', editmaxSync.bind(null, null), false);
+        document.getElementsByClassName('eg-editmax-trtitle')[0].
+            addEventListener('input', editmaxSync.bind(null, null), false);
+        document.getElementsByClassName('btn-save-to-draft')[0].
+            addEventListener('click', function () {
+                document.getElementById('btn-save-to-draft').click(); });
+            
+        function editmaxSync(isOpen) {
+            if (isOpen) {
+                document.getElementsByClassName('eg-editmax-editarea')[0].value =
+                    document.getElementById('postarea').value;
+                document.getElementsByClassName('eg-editmax-trtitle')[0].value =
+                    document.getElementById('posttitle').value; 
+            } else {
+                document.getElementById('postarea').value =
+                    document.getElementsByClassName('eg-editmax-editarea')[0].value;
+                document.getElementById('posttitle').value = 
+                    document.getElementsByClassName('eg-editmax-trtitle')[0].value;
+            }
+        }
+        
+		function postpSetLoadingViewStatus(cls) {
 			document.getElementsByClassName('postp-loading')[0].className = "postp-loading " + cls;
 		}
         
         function postpClose() {
-            setLoadingViewStatus("");
+            postpSetLoadingViewStatus("");
 			document.getElementsByClassName('postp-cont')[0].classList.remove('show');
 			document.getElementsByClassName('postp-content')[0].innerHTML = "";
         }
@@ -112,43 +173,45 @@
 		document.getElementsByClassName('postp-trclose')[0].addEventListener("click", postpClose);
         document.getElementsByClassName('postp-cont')[0].addEventListener('click', postpClose);
 		
-		document.getElementById('btn-preview').addEventListener("click", function () {
-			document.getElementsByClassName('postp-cont')[0].classList.add('show');
-			setLoadingViewStatus("loading");
-			document.getElementsByClassName('postp-content')[0].innerHTML = "";
-			
-			function error () {
-				setLoadingViewStatus("error");
-			}
-			
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/api/splitpara', true);
-			xhr.setRequestHeader('Accept', 'application/json');
-			xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-			xhr.onload = function () {
-				if (xhr.status === 200) {
-					var paras = JSON.parse(xhr.response);
-					var ret = "";
-					for (var i = 0; i < paras.length; i++) {
-						ret += paras[i];
-					}
-					document.getElementsByClassName('postp-content')[0].innerHTML = ret;
-					setLoadingViewStatus("");
-				} else {
-					error();
-				}
-			};
-			xhr.onerror = function () {
-				error();
-			};
-            // FormData cannot be converted to JSON, FML
-			xhr.send(JSON.stringify({
-				'title': document.querySelector('[name="title"]').value,
-				'subtitle': document.querySelector('[name="subtitle"]').value,
-				'summary': document.querySelector('[name="summary"]').value,
-				'content': document.querySelector('[name="content"]').value,
-                'format': document.querySelector('[name="format"]:checked').value
-			}));
-		});
+		Array.prototype.forEach.call(document.getElementsByClassName('btn-preview'), function (e) {
+            e.addEventListener("click", function () {
+                document.getElementsByClassName('postp-cont')[0].classList.add('show');
+                postpSetLoadingViewStatus("loading");
+                document.getElementsByClassName('postp-content')[0].innerHTML = "";
+                
+                function error () {
+                    postpSetLoadingViewStatus("error");
+                }
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/splitpara', true);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        var paras = JSON.parse(xhr.response);
+                        var ret = "";
+                        for (var i = 0; i < paras.length; i++) {
+                            ret += paras[i];
+                        }
+                        document.getElementsByClassName('postp-content')[0].innerHTML = ret;
+                        postpSetLoadingViewStatus("");
+                    } else {
+                        error();
+                    }
+                };
+                xhr.onerror = function () {
+                    error();
+                };
+                // FormData cannot be converted to JSON, FML
+                xhr.send(JSON.stringify({
+                    'title': document.querySelector('[name="title"]').value,
+                    'subtitle': document.querySelector('[name="subtitle"]').value,
+                    'summary': document.querySelector('[name="summary"]').value,
+                    'content': document.querySelector('[name="content"]').value,
+                    'format': document.querySelector('[name="format"]:checked').value
+                }));
+            });
+        }); // forEach
 	});
 </script>

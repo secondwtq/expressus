@@ -1,0 +1,156 @@
+
+@import "prefixer.less";
+@import "eus-define.less";
+
+.eg-noscroll {
+    overflow: hidden;
+    -webkit-overflow-scrolling:touch;
+}
+
+.eg-metatext {
+    font-size: 0.9rem;
+    color: lightgray;
+}
+
+.eg-minipad4 {
+    padding: 0.4rem;
+}
+
+.eg-editmax {
+    position: relative;
+    color: lightgray;
+    button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        
+        padding: 0.5rem;
+        z-index: 4;
+        
+        border-radius: 0 4px 0 4px;
+        background: transparent;
+        box-shadow: 0 0 4px @darken-30, 0 0 3px @lint-15 inset;
+        text-shadow: 0 1px 1px @darken-20;
+        border: none;
+    }
+}
+
+.eg-editmax-dialog-cont {
+	position: fixed;
+	width: 100%;
+	height: 0;
+	top: 0;
+	left: 0;
+	opacity: 0.6;
+	z-index: 1208;
+	background-color: @darken-50;
+	box-shadow: 0 16px 56px @darken-20 inset;
+	.transition(opacity 0.3s ease-in-out);
+	
+	.eg-editmax-dialog {
+		display: -webkit-flex;
+		display: flex;
+		.flex-direction(column);
+		position: fixed;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		left: 0;
+		
+		box-shadow: 0 0 28px @darken-30 inset;
+		background-color: #4a525a;
+        opacity: 0;
+		.transition(all 0.2s ease-in-out);
+		.transform(scale3d(0.5, 0.5, 1));
+        visibility: hidden;
+		
+		// title bar
+		.eg-editmax-tr {
+			padding: 1em;
+			.user-select(none);
+			.eg-editmax-trspan {
+				display: inline-block;
+				line-height: 15px;
+                vertical-align: middle;
+				
+			}
+            .eg-editmax-trbtn {
+                &:hover { background-color: #ddd; }
+				&:active { background-color: #bbb; }
+                text-align: center;
+				border-radius: 8px;
+				background-color: lightgray;
+				color: #73787e;
+				cursor: pointer;
+                width: 16px;
+				height: 16px;
+                box-shadow: 0 2px 1px @darken-10 inset;
+            }
+            
+            input.eg-editmax-trtitle {
+                background: transparent;
+                border: none;
+                outline: none;
+                font-weight: bold;
+                font-size: 1.1em;
+                padding-left: 1em;
+            }
+		}
+		
+		.eg-editmax-content {
+			margin: 0 1em 1em 1em;
+            flex-grow: 1;
+			box-sizing: content-box;
+            position: relative;
+            
+            textarea {
+                position: absolute;
+                background: none;
+                top: 0; left: 0;
+                width: 100%;
+                height: 100%;
+                
+                border-radius: 2px;
+                box-shadow: none;
+                border: 1px dashed @lint-5;
+                outline: none;
+            }
+		}
+	}
+}
+
+.eg-editmax-dialog-cont.show {
+	display: block;
+	opacity: 1.0;
+	height: 100%;
+	.eg-editmax-dialog {
+        opacity: 1.0;
+        visibility: visible;
+		.transform(none);
+    }
+}
+
+.eg-bottombar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0;
+    background-color: #ECEFF1;
+    box-shadow: 0 0 3rem @darken-50;
+    .transition(all 0.4s ease-in-out);
+    
+    &.hide {
+        box-shadow: none;
+        .transform(translate3d(0, 100%, 0));
+    }
+    
+    .eg-bottombar-btn {
+        font-size: 1rem;
+        padding: 1em 1em;
+        height: 100%;
+        background: @darken-5;
+        border: none;
+        border-right: 1px dashed @darken-5;
+        color: #555;
+    }
+}
