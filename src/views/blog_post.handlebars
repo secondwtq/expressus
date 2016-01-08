@@ -119,6 +119,8 @@
 	</div>
 </div>
 {{> ref_dollar}}
+<script src="/static/external/MathJax.js"></script>
+<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
 <script>
     
 	document.addEventListener("DOMContentLoaded", function () {
@@ -195,6 +197,10 @@
                             ret += paras[i];
                         }
                         document.getElementsByClassName('postp-content')[0].innerHTML = ret;
+                        if (MathJax) {
+                            // update MathJax
+                            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+                        }
                         postpSetLoadingViewStatus("");
                     } else {
                         error();

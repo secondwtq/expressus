@@ -11,7 +11,10 @@ util.inherits(SessionStore, session.Store);
 
 SessionStore.prototype.get = function (sid, callback) {
 	exusdb.db().oneOrNone("SELECT * FROM stakeholder_seri WHERE sid=$1", [ sid ])
-		.then((data) => callback(null, data['session']))
+		.then((data) => data ? 
+            callback(null, data['session'])
+                :
+            callback())
 		.catch((err) => callback(err));
 };
 
