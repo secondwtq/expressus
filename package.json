@@ -3,7 +3,9 @@
   "version": "0.1.7",
   "description": "Expressus.",
   "main": "src/app.js",
-  "scripts": {},
+  "scripts": {
+      "start": "node src/app.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/secondwtq/expressus.git"

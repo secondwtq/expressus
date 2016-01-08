@@ -8,15 +8,15 @@
 
 * Recent comments.
 
-* Tags/Categories.
-
 * RSS Feeds.
+
+* Article Preview.
+
+* Tags/Categories.
 
 * External Links.
 
 * Paging and archives.
-
-* Article Preview.
 
 * Comment Preview.
 
