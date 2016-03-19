@@ -297,21 +297,25 @@ a.anchor-sp:hover { color: white; }
 	flex-grow: 1;
 }
 
+/* disable the crappy hori scroller in non-WebKit browsers */
+/*
 @media screen and (min-height: 319px) {
 .article-paragraphs {
-    /* disable the crappy hori scroller in non-WebKit browsers */
     overflow-y: scroll;
     overflow-x: hidden;
 	scroll-behavior: smooth;
 }
 }
+*/
 
+/*
 @media screen and (min-height: 319px) {
 	.article-paragraphs {
 		max-height: 320px; }
-}
+}*/
 
 /* Apple iPhone 5/5c/5s Safari */
+/*
 @media screen and (min-height: 460px) {
 	.article-paragraphs {
 		max-height: 392px; }
@@ -358,6 +362,7 @@ a.anchor-sp:hover { color: white; }
 		overflow: visible
 	}
 }
+*/
 
 .comment-form textarea {
 	width: 100%;
