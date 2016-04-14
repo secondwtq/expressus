@@ -298,7 +298,7 @@ router.get('/article/:id', function (req, res, next) {
 
 // POST paragraph comment
 router.post('/article/:article_id/paragraph/:paragraph_id/comment', model.Auth.Middleware.authed, function (req, res, next) {
-	marked.setOptions(config['comment']);
+	marked.setOptions(config['marked']['comment']);
 	var parid = parseInt(req.params.paragraph_id);
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 
@@ -311,7 +311,7 @@ router.post('/article/:article_id/paragraph/:paragraph_id/comment', model.Auth.M
 
 // POST article comment
 router.post('/article/:article_id/comment', model.Auth.Middleware.authed, function (req, res, next) {
-	marked.setOptions(config['comment']);
+	marked.setOptions(config['marked']['comment']);
 	var content = req.body['use_markdown'] ? 
 		marked(req.body['content']) : 
 		xss.inHTMLData(req.body['content']);

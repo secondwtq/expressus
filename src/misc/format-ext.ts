@@ -1,7 +1,9 @@
 
 // we must create this extra script
 //  cuz ES5 CommonJS is not good at dealing
-//  with cyclic dependencies 
+//  with cyclic dependencies
+//
+// well now you know how CommonJS handles cyclic dependencies :)
 'use strict'
 
 import * as config from '../config';
