@@ -26,7 +26,7 @@
             
         {{#if recent_comments}}
             <hr class="dashed" />
-            <div class="recent-comments">
+            <div class="sidebar-item recent-comments">
                 <h3>Recent Comments</h3>
                 <ul>
                 {{#recent_comments}}
@@ -40,6 +40,17 @@
                 </ul>
             </div>
         {{/if}}
+		{{#if partners}}
+			<hr class="dashed" />
+			<div class="sidebar-item partners">
+				<h3>Partners</h3>
+				<ul>
+				{{#partners}}
+					<li><a href="{{url}}">{{name}}</a></li>
+				{{/partners}}
+				</ul>
+			</div>
+		{{/if}}
         
 		</div>
 	</div>

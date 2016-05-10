@@ -58,11 +58,19 @@ function convertUserDescToIndexUserDesc(src) {
 function getRecentComments(req, res, next) {
     exusdb.db().manyOrNone('SELECT article_id, commenter_id, username, comment_date, content, title FROM "comment_detail" \
         JOIN "article" ON comment_detail.article_id = article.id WHERE indraft = FALSE \
-        AND trashed = FALSE ORDER BY comment_date DESC LIMIT $1', [ 6 ])
+        AND trashed = FALSE ORDER BY comment_date DESC LIMIT $1', [ config['blog']['count_recent_comments'] ])
     .then(function (results) {
         results.forEach((comment) =>
             comment['content'] = $.load(comment['content']).root().text());
         res['recent_comments'] = results;
+        next();
+    });
+}
+
+function getPartnerLinks(req, res, next) {
+    exusdb.db().manyOrNone('SELECT name, url FROM "partner_link" ORDER BY id')
+    .then(function (results) {
+        res['partners'] = results;
         next();
     });
 }
@@ -72,6 +80,7 @@ router.get('/', (req, res, next) =>
 
 router.get('/article',
     getRecentComments, 
+	getPartnerLinks,
     (req, res, next) =>
         exusdb.db().any('SELECT * FROM "article_detail" \
                         WHERE NOT trashed AND NOT indraft \
@@ -81,7 +90,8 @@ router.get('/article',
                 'title_': 'Articles',
                 'articles': data,
                 'show_license': true,
-                'recent_comments': res['recent_comments']
+                'recent_comments': res['recent_comments'],
+				'partners': res['partners']
             }),
         (reason) => next(_.status(reason, 500))
         )
